@@ -22,6 +22,7 @@
               text-color="#fff"
               active-text-color="#ffd04b"
               v-if="login"
+              v-show="show"
             >
               <el-menu-item index="/WantToBuyGoods">
                 我要买
@@ -32,6 +33,7 @@
             </el-menu>
             <el-dropdown
               v-if="login"
+              v-show="show"
               style="float:right;display:flex;margin-left:10px"
               @command="handleProfileCommand"
             >
@@ -91,13 +93,16 @@ export default {
     return {
       circleUrl:
         "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      login: false
+      login: false,
+      show: true
     };
   },
   created() {
     if (localStorage.getItem("username")) {
       this.login = true;
+      this.show = true;
     } else {
+      this.login = false;
       let _this = this;
       api
         .checkLogin()
@@ -115,35 +120,26 @@ export default {
   updated() {
     if (localStorage.getItem("username")) {
       this.login = true;
+      this.show = true;
     } else {
-      let _this = this;
-      api
-        .checkLogin()
-        .then(() => {
-          _this.login = true;
-        })
-        .catch(() => {
-          _this.login = false;
-        })
-        .then(() => {
-          _this.login = false;
-        });
+      this.login = false;
+      this.show = false;
     }
   },
   methods: {
     handleProfileCommand(command) {
       if (command === "profile") {
-        this.$router.push("/Profile");
+        this.$router.push("/Profile").catch(err => err);
       } else if (command === "logout") {
         if (api.logout()) {
           localStorage.removeItem("username");
-          this.login = false;
-          this.$router.push("/");
+          this.show = false;
+          this.$router.push("/").catch(err => err);
         } else {
           this.$message.error("注销失败");
         }
       } else if (command === "Deposit") {
-        this.$router.push("/Deposit");
+        this.$router.push("/Deposit").catch(err => err);
       } else {
         this.$message.error("系统出错啦");
       }
