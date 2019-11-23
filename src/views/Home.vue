@@ -71,7 +71,11 @@
       >
         <el-table-column width="200">
           <template slot-scope="scope">
-            <img :src="getImgUrl(scope.row.picUrl)" />
+            <el-image
+              :src="getImgUrl(scope.row.picUrl)"
+              :preview-src-list="[getImgUrl(scope.row.picUrl)]"
+              fit="contain"
+            />
           </template>
         </el-table-column>
         <el-table-column
@@ -82,8 +86,8 @@
         >
           <template slot-scope="scope">
             <router-link
-              to="/Goods"
-              style="text-decoration:none;color:black;font-size:20px"
+              :to="getGoodsUrl(scope.row.id)"
+              style="text-decoration:none;color:black"
             >
               {{ scope.row.name }}
             </router-link>
@@ -143,6 +147,7 @@ export default {
       _this.loading = false;
     });
   },
+  computed: {},
   methods: {
     processTableData: function(data) {
       let tableData = data;
@@ -183,8 +188,13 @@ export default {
       this.$refs[formName].resetFields();
     },
     getImgUrl: function(url) {
-      console.log(url);
-      return `http://localhost:8081/picUrl/${url}`;
+      if (url) {
+        return `http://localhost:8081/picUrl/${url}`;
+      }
+      return undefined;
+    },
+    getGoodsUrl(id) {
+      return `/Goods/${id}`;
     }
   }
 };
