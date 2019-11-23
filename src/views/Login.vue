@@ -36,13 +36,13 @@ export default {
     };
   },
   methods: {
-    login: async function() {
+    login: function() {
       api
         .login(this.loginForm)
         .then(res => {
           localStorage.username = this.loginForm.name;
           this.$message({ message: "登陆成功", type: "success" });
-          this.$router.push("/");
+          this.$router.push("/").catch(err => err);
         })
         .catch(() => {
           this.$message.error("登陆失败");
