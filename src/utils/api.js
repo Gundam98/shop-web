@@ -7,12 +7,20 @@ function getAllGoods() {
     return axios.get("/goods/");
 }
 
+function getGoodsInfo(id) {
+    return axios.get(`/goods/${id}`);
+}
+
 function checkLogin() {
     return axios.get("/user/session/");
 }
 
 function getUserInfo(id) {
     return axios.get(`/user/${id}/`);
+}
+
+function getCurrentGoodsInfo() {
+    return axios.get("/user/information/me");
 }
 
 function getGoodsType(id) {
@@ -32,10 +40,21 @@ function login(data) {
     });
 }
 
+function bid(id, price) {
+    return axios.get(`/trade/bid/${id}`, {
+        params: {
+            price: price
+        }
+    });
+}
+
 export default {
     getAllGoods,
     logout,
     login,
     getUserInfo,
-    getGoodsType
+    getGoodsType,
+    getGoodsInfo,
+    checkLogin,
+    bid
 };
