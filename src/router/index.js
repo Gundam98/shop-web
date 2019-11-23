@@ -86,7 +86,7 @@ const routes = [{
             import ("../views/AllGoods.vue")
     },
     {
-        path: "/Goods",
+        path: "/Goods/:id",
         name: "Goods",
         meta: {
             requireAuth: true
