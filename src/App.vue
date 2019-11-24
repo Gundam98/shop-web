@@ -134,6 +134,7 @@ export default {
         if (api.logout()) {
           localStorage.removeItem("username");
           this.show = false;
+          this.$message.success("注销成功");
           this.$router.push("/").catch(err => err);
         } else {
           this.$message.error("注销失败");
