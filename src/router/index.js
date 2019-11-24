@@ -88,9 +88,6 @@ const routes = [{
     {
         path: "/Goods/:id",
         name: "Goods",
-        meta: {
-            requireAuth: true
-        },
         component: () =>
             import ("../views/Goods.vue")
     }
