@@ -41,7 +41,7 @@ export default {
         .login(this.loginForm)
         .then(res => {
           localStorage.username = this.loginForm.name;
-          this.$message({ message: "登陆成功", type: "success" });
+          this.$message.success("登陆成功");
           this.$router.push("/").catch(err => err);
         })
         .catch(() => {
