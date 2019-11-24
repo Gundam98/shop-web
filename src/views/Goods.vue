@@ -107,32 +107,33 @@ export default {
   components: {
     countdown
   },
-  created() {
+  async created() {
     let _this = this;
     this.curUser = localStorage.username;
-    api.getGoodsInfo(this.$route.params.id).then(res => {
-      //_this.goodsInfo = _this.processGoodsInfo(res.data);
-      _this.goodsInfo = _this.processGoodsInfo(res.data);
-    });
+    let res = await api.getGoodsInfo(this.$route.params.id);
+    this.goodsInfo = this.processGoodsInfo(res.data);
   },
   methods: {
     processGoodsInfo: function(data) {
       let _this = this;
       let info = data;
       if (info.overTime < new Date().getTime()) {
-        console.log("竞拍结束");
+        this.tag = {
+          type: "error",
+          message: "竞拍结束"
+        };
       } else {
         //时间戳转时间字符串
         info.modifiedTime = formatTime(info.modifiedTime, "Y/M/D/ h:m:s");
 
         //通过卖家id获取卖家名字
         api.getUserInfo(info.sellerUserId).then(res => {
-          info.sellerUser = res.data.username;
+          _this.$set(_this.goodsInfo, "sellerUser", res.data.username);
         });
 
         //商品类型转换
         api.getGoodsType(info.type).then(res => {
-          info.type = res.data.typeName;
+          _this.$set(_this.goodsInfo, "type", res.data.typeName);
         });
 
         //通过竞价者id获取竞价者名字

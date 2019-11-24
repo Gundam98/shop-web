@@ -153,9 +153,10 @@ export default {
           tableData.splice(i, 1);
         } else {
           //时间戳转时间字符串
-          tableData[i].overTime = formatTime(
-            tableData[i].overTime,
-            "Y/M/D/ h:m:s"
+          _this.$set(
+            tableData[i],
+            "overTime",
+            formatTime(tableData[i].overTime, "Y/M/D/ h:m:s")
           );
 
           //通过卖家id获取卖家名字
