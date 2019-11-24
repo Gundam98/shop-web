@@ -38,7 +38,7 @@
               @command="handleProfileCommand"
             >
               <el-avatar :src="circleUrl"></el-avatar>
-              <el-dropdown-menu slot="dropdown">
+              <el-dropdown-menu slot="dropdown" trigger="click">
                 <el-dropdown-item command="profile">账户信息</el-dropdown-item>
                 <el-dropdown-item command="Deposit">充值</el-dropdown-item>
                 <el-dropdown-item command="logout">注销</el-dropdown-item>
@@ -193,5 +193,9 @@ img {
   height: auto;
   max-width: 100%;
   max-height: 100%;
+}
+
+[v-cloak] {
+  display: none;
 }
 </style>
