@@ -93,16 +93,10 @@
             </router-link>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="type"
-          label="商品类型"
-          width="100"
-        ></el-table-column>
-        <el-table-column
-          prop="sellerUser"
-          label="卖家"
-          width="150"
-        ></el-table-column>
+        <el-table-column prop="typeName" label="商品类型" width="100">
+        </el-table-column>
+        <el-table-column prop="sellerName" label="卖家" width="150">
+        </el-table-column>
         <el-table-column
           prop="minPrice"
           label="最低价"
@@ -151,27 +145,29 @@ export default {
   methods: {
     processTableData: function(data) {
       let tableData = data;
-      let i = 0;
-      while (i < tableData.length) {
+      let _this = this;
+      let count = 0;
+      while (count < tableData.length) {
+        let i = count;
         if (tableData[i].overTime < new Date().getTime()) {
           tableData.splice(i, 1);
         } else {
           //时间戳转时间字符串
-          (function(i) {
-            tableData[i].overTime = formatTime(
-              tableData[i].overTime,
-              "Y/M/D/ h:m:s"
-            );
-            api.getUserInfo(tableData[i].sellerUserId).then(res => {
-              //通过卖家id获取卖家名字
-              tableData[i].sellerUser = res.data.username;
-            });
-            api.getGoodsType(tableData[i].type).then(res => {
-              //商品类型转换
-              tableData[i].type = res.data.typeName;
-            });
-          })(i);
-          i++;
+          tableData[i].overTime = formatTime(
+            tableData[i].overTime,
+            "Y/M/D/ h:m:s"
+          );
+
+          //通过卖家id获取卖家名字
+          api.getUserInfo(tableData[i].sellerUserId).then(res => {
+            _this.$set(tableData[i], "sellerName", res.data.username);
+          });
+
+          //商品类型转换
+          api.getGoodsType(tableData[i].type).then(res => {
+            _this.$set(tableData[i], "typeName", res.data.typeName);
+          });
+          count++;
         }
       }
       return tableData;
@@ -189,7 +185,7 @@ export default {
     },
     getImgUrl: function(url) {
       if (url) {
-        return `http://localhost:8081/picUrl/${url}`;
+        return `http://10.128.248.142:8081/picUrl/${url}`;
       }
       return undefined;
     },
