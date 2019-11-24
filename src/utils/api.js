@@ -11,7 +11,7 @@ function getGoodsInfo(id) {
     return axios.get(`/goods/${id}`);
 }
 
-function checkLogin() {
+function getCurUserId() {
     return axios.get("/user/session/");
 }
 
@@ -25,6 +25,10 @@ function getCurrentGoodsInfo() {
 
 function getGoodsType(id) {
     return axios.get(`/goodsTypes/${id}`);
+}
+
+function changeUserInfo(data) {
+    return axios.put("/user", data);
 }
 
 function logout() {
@@ -55,6 +59,7 @@ export default {
     getUserInfo,
     getGoodsType,
     getGoodsInfo,
-    checkLogin,
+    getCurUserId,
+    changeUserInfo,
     bid
 };
