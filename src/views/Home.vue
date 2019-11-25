@@ -1,66 +1,70 @@
 <template>
   <div class="home">
     <div class="search">
-      <el-row>
-        <el-form :inline="true" :model="searchForm" ref="searchForm">
-          <el-form-item label="商品名:">
-            <el-input
-              v-model="searchForm.name"
-              placeholder="商品名"
-              size="small"
-              style="width:100px"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="商品类型:">
-            <el-select
-              v-model="searchForm.type"
-              placeholder="商品类型"
-              size="small"
-              style="width:100px"
-            >
-              <el-option label="生活用品" value="commodity"></el-option>
-              <el-option label="食品" value="food"></el-option>
-              <el-option label="电子产品" value="electronics"></el-option>
-              <el-option label="家电" value="appliance"></el-option>
-              <el-option label="学习用品" value="stationery"></el-option>
-              <el-option label="娱乐" value="entertainment"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="价格区间:">
+      <el-form :model="searchForm" :inline="true" ref="searchForm">
+        <el-form-item label="商品名:" prop="name">
+          <el-input
+            v-model="searchForm.name"
+            placeholder="商品名"
+            size="small"
+            style="width:100px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="商品类型:" prop="type">
+          <el-select
+            v-model="searchForm.type"
+            placeholder="商品类型"
+            size="small"
+            style="width:100px"
+          >
+            <el-option
+              v-for="item in typeData"
+              :key="item.id"
+              :label="item.typeName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="价格区间:">
+          <el-row>
             <el-col :span="11">
-              <el-input
-                v-model="searchForm.minPrice"
-                placeholder="最低价"
-                type="number"
-                size="small"
-                style="width:100px"
-              >
-              </el-input>
+              <el-form-item prop="minPrice" style="margin-top:0">
+                <el-input
+                  v-model="searchForm.minPrice"
+                  placeholder="最低价"
+                  type="number"
+                  size="small"
+                  style="width:100px"
+                >
+                </el-input>
+              </el-form-item>
             </el-col>
-            <el-col class="line" :span="2">-</el-col>
+            <el-col :span="2">-</el-col>
             <el-col :span="11">
-              <el-input
-                v-model="searchForm.maxPrice"
-                placeholder="最高价"
-                type="number"
-                size="small"
-                style="width:100px"
-              >
-              </el-input>
+              <el-form-item prop="maxPrice" style="margin-top:0">
+                <el-input
+                  v-model="searchForm.maxPrice"
+                  placeholder="最高价"
+                  type="number"
+                  size="small"
+                  style="width:100px"
+                >
+                </el-input>
+              </el-form-item>
             </el-col>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitForm()" size="small">
-              提交
-            </el-button>
-            <el-button @click="resetForm('searchForm')" size="small">
-              重置
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-row>
+          </el-row>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm" size="small">
+            提交
+          </el-button>
+          <el-button @click="resetForm" size="small">
+            重置
+          </el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <div>
+    <div class="displayTable" style="background-color:grey">
       <el-table
         :data="tableData"
         stripe
@@ -126,22 +130,25 @@ export default {
     return {
       searchForm: {
         name: "",
-        minPrice: 0,
-        maxPrice: 0,
+        minPrice: null,
+        maxPrice: null,
         type: ""
       },
+      typeData: [],
       tableData: [],
       loading: true
     };
   },
   created() {
     let _this = this;
-    api.getAllGoods().then(res => {
+    api.getGoodsType().then(res => {
+      _this.typeData = res.data;
+    });
+    api.getGoods().then(res => {
       _this.tableData = _this.processTableData(res.data);
       _this.loading = false;
     });
   },
-  computed: {},
   methods: {
     processTableData: function(data) {
       let tableData = data;
@@ -174,21 +181,43 @@ export default {
       return tableData;
     },
     submitForm: function() {
-      if (this.searchForm.minPrice <= this.searchForm.maxPrice) {
-        console.log(this.searchForm);
+      if (
+        parseInt(this.searchForm.minPrice) <=
+          parseInt(this.searchForm.maxPrice) ||
+        !this.searchForm.minPrice ||
+        !this.searchForm.maxPrice
+      ) {
+        let _this = this;
+        this.loading = true;
+        api
+          .getGoods({
+            name: this.searchForm.name || null,
+            minPrice: this.searchForm.minPrice,
+            maxPrice: this.searchForm.maxPrice,
+            type: this.searchForm.type || null
+          })
+          .then(res => {
+            _this.tableData = _this.processTableData(res.data);
+            _this.loading = false;
+          })
+          .catch(e => {
+            console.log(e);
+          });
       } else {
         this.$message.error("最低值不能高于最高值");
         return;
       }
     },
-    resetForm: function(formName) {
-      this.$refs[formName].resetFields();
+    resetForm: function() {
+      this.$refs["searchForm"].resetFields();
     },
     getImgUrl: function(url) {
       if (url) {
         return `http://10.128.248.142:8081/picUrl/${url}`;
+      } else {
+        console.log("parse url failed");
+        return undefined;
       }
-      return undefined;
     },
     getGoodsUrl(id) {
       return `/Goods/${id}`;
@@ -196,3 +225,16 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.el-form-item {
+  margin: 10px;
+}
+
+.search {
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px;
+  border-radius: 5px;
+  margin: 10px;
+  background-color: white;
+}
+</style>
