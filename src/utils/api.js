@@ -3,8 +3,10 @@ import axios from "axios";
 axios.defaults.timeout = 5000; // 请求超时
 axios.defaults.baseURL = "/api/"; // api 即上面 vue.config.js 中配置的地址
 
-function getAllGoods() {
-    return axios.get("/goods/");
+function getGoods(data) {
+    return axios.get("/goods", {
+        params: data
+    });
 }
 
 function getGoodsInfo(id) {
@@ -12,19 +14,24 @@ function getGoodsInfo(id) {
 }
 
 function getCurUserId() {
-    return axios.get("/user/session/");
+    return axios.get("/user/session");
 }
 
 function getUserInfo(id) {
-    return axios.get(`/user/${id}/`);
+    return axios.get(`/user/${id}`);
 }
 
 function getCurrentGoodsInfo() {
     return axios.get("/user/information/me");
 }
 
-function getGoodsType(id) {
-    return axios.get(`/goodsTypes/${id}`);
+function getGoodsType() {
+    if (arguments.length === 1) {
+        let id = arguments[0];
+        return axios.get(`/goodsTypes/${id}`);
+    } else {
+        return axios.get("/goodsTypes");
+    }
 }
 
 function changeUserInfo(data) {
@@ -44,6 +51,10 @@ function login(data) {
     });
 }
 
+function register(data) {
+    return axios.post("/user", data);
+}
+
 function bid(id, price) {
     return axios.get(`/trade/bid/${id}`, {
         params: {
@@ -53,13 +64,14 @@ function bid(id, price) {
 }
 
 export default {
-    getAllGoods,
+    getGoods,
     logout,
     login,
     getUserInfo,
     getGoodsType,
     getGoodsInfo,
     getCurUserId,
+    register,
     changeUserInfo,
     bid
 };
