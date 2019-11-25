@@ -37,7 +37,9 @@
               style="float:right;display:flex;margin-left:10px"
               @command="handleProfileCommand"
             >
-              <el-avatar :src="circleUrl"></el-avatar>
+              <el-avatar>
+                <img src="./assets/head.png" />
+              </el-avatar>
               <el-dropdown-menu slot="dropdown" trigger="click">
                 <el-dropdown-item command="profile">账户信息</el-dropdown-item>
                 <el-dropdown-item command="Deposit">充值</el-dropdown-item>
@@ -91,8 +93,6 @@ export default {
   components: {},
   data() {
     return {
-      circleUrl:
-        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       login: false,
       show: true
     };
@@ -102,38 +102,44 @@ export default {
       this.login = true;
       this.show = true;
     } else {
-      this.login = false;
+      this.check();
+    }
+    setInterval(() => {
+      this.check();
+    }, 1000);
+  },
+  methods: {
+    check() {
       let _this = this;
       api
-        .checkLogin()
-        .then(() => {
-          _this.login = true;
+        .getCurUserId()
+        .then(res => {
+          if (res.data !== "") {
+            api.getUserInfo(res.data).then(userInfo => {
+              localStorage.username = userInfo.data.username;
+              _this.login = true;
+              _this.show = true;
+            });
+          } else {
+            _this.login = false;
+            _this.show = false;
+            localStorage.clear();
+          }
         })
         .catch(() => {
           _this.login = false;
-        })
-        .then(() => {
-          _this.login = false;
+          _this.show = false;
+          localStorage.clear();
         });
-    }
-  },
-  updated() {
-    if (localStorage.getItem("username")) {
-      this.login = true;
-      this.show = true;
-    } else {
-      this.login = false;
-      this.show = false;
-    }
-  },
-  methods: {
+    },
     handleProfileCommand(command) {
       if (command === "profile") {
         this.$router.push("/Profile").catch(err => err);
       } else if (command === "logout") {
         if (api.logout()) {
-          localStorage.removeItem("username");
+          localStorage.clear();
           this.show = false;
+          this.login = false;
           this.$message.success("注销成功");
           this.$router.push("/").catch(err => err);
         } else {
@@ -157,6 +163,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   min-height: 100vh;
+  background-color: #f5f6f7;
 }
 
 body {
