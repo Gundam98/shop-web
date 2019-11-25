@@ -64,7 +64,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="displayTable" style="background-color:grey">
+    <div class="displayTable">
       <el-table
         :data="tableData"
         stripe
@@ -236,5 +236,10 @@ export default {
   border-radius: 5px;
   margin: 10px;
   background-color: white;
+}
+
+.displayTable {
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px;
+  margin: 10px;
 }
 </style>
