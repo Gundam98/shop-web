@@ -1,22 +1,40 @@
 <template>
-  <div>
+  <div style="position:relative; top:50%; margin-top:-100px;">
     <el-row>
-      <el-col :span="8" :offset="8" label-position="right">
+      <el-col
+        :span="8"
+        :offset="8"
+        label-position="right"
+        style="box-shadow:rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px; border-radius:5px; padding:20px; background-color:white"
+      >
+        <div style="font-size:30px;margin-bottom:10px">登陆</div>
         <el-form :model="loginForm" status-icon>
-          <el-form-item>
-            <el-input v-model="loginForm.name" placeholder="用户名"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-input
-              v-model="loginForm.password"
-              placeholder="密码"
-              type="password"
-            >
-            </el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="login()">登陆</el-button>
-            <el-button type="primary" @click="register()">注册</el-button>
+          <div>
+            <el-form-item>
+              <el-input
+                v-model="loginForm.name"
+                placeholder="用户名"
+              ></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-input
+                v-model="loginForm.password"
+                placeholder="密码"
+                type="password"
+              >
+              </el-input>
+            </el-form-item>
+          </div>
+
+          <el-form-item style="margin-top:20px;margin-bottom:0">
+            <el-row type="flex" justify="space-around">
+              <el-col :span="6">
+                <el-button type="primary" @click="login">登陆</el-button>
+              </el-col>
+              <el-col :span="6">
+                <el-button type="primary" @click="register">注册</el-button>
+              </el-col>
+            </el-row>
           </el-form-item>
         </el-form>
       </el-col>
@@ -47,6 +65,9 @@ export default {
         .catch(() => {
           this.$message.error("登陆失败");
         });
+    },
+    register: function() {
+      this.$router.push("/Register").catch(e => e);
     }
   }
 };
