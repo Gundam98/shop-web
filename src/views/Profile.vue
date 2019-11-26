@@ -1,8 +1,12 @@
 <template>
   <div>
-    <h1>账户信息</h1>
     <el-row>
-      <el-col :span="14" :offset="5">
+      <el-col
+        :span="14"
+        :offset="5"
+        style="box-shadow:rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px; border-radius:5px; padding:20px; background-color:white"
+      >
+        <div style="font-size:30px;margin-bottom:10px">账户信息</div>
         <el-form
           label-position="right"
           label-width="120px"
@@ -34,7 +38,7 @@
           <el-form-item label="上次修改时间">
             <el-input v-model="info.modifierTimeStr" readOnly="true"></el-input>
           </el-form-item>
-          <el-form-item style="text-align:left">
+          <el-form-item style="margin-top:20px;margin-bottom:0;text-align:left">
             <el-button type="primary" @click="editInfo">修改信息</el-button>
             <el-button type="primary" @click="editPassword">修改密码</el-button>
           </el-form-item>
