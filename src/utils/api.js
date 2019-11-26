@@ -1,4 +1,5 @@
 import axios from "axios";
+import _ from "lodash";
 
 axios.defaults.timeout = 5000; // 请求超时
 axios.defaults.baseURL = "/api/"; // api 即上面 vue.config.js 中配置的地址
@@ -51,6 +52,16 @@ function login(data) {
     });
 }
 
+function sellGoods(data) {
+    return axios.post("/goods", data, {
+        headers: { "Content-Type": "multipart/form-data" }
+    });
+}
+
+function getMySold() {
+    return axios.get("/goods/my");
+}
+
 function register(data) {
     return axios.post("/user", data);
 }
@@ -73,5 +84,7 @@ export default {
     getCurUserId,
     register,
     changeUserInfo,
-    bid
+    bid,
+    sellGoods,
+    getMySold
 };
