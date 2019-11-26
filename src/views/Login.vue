@@ -1,5 +1,5 @@
 <template>
-  <div style="position:relative; top:50%; margin-top:-100px;">
+  <div style="position:relative; top:50%; margin-top:-150px;">
     <el-row>
       <el-col
         :span="8"
