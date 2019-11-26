@@ -81,7 +81,7 @@ export default {
         .register(this.registerForm)
         .then(res => {
           _this.$message.success("注册成功");
-          _this.$router.push("/Login");
+          _this.$router.push("/Login").catch(e => e);
         })
         .catch(e => {
           _this.$message.warnming("注册失败");
