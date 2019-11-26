@@ -11,19 +11,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="商品类型:" prop="type">
-          <el-select
-            v-model="searchForm.type"
-            placeholder="商品类型"
-            size="small"
-            style="width:100px"
-          >
-            <el-option
-              v-for="item in typeData"
-              :key="item.id"
-              :label="item.typeName"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <typeSelector size="small" @type="getType"></typeSelector>
         </el-form-item>
         <el-form-item label="价格区间:">
           <el-row>
@@ -31,7 +19,7 @@
               <el-form-item prop="minPrice" style="margin-top:0">
                 <el-input
                   v-model="searchForm.minPrice"
-                  placeholder="最低价"
+                  placeholder="起拍价"
                   type="number"
                   size="small"
                   style="width:100px"
@@ -72,6 +60,7 @@
         style="width: 100%"
         empty-text="暂无上架商品"
         v-loading="loading"
+        lazy
       >
         <el-table-column width="200">
           <template slot-scope="scope">
@@ -123,6 +112,7 @@
 <script>
 import api from "@/utils/api";
 import formatTime from "@/utils/formatTime";
+import typeSelector from "@/components/TypeSelector";
 
 export default {
   name: "home",
@@ -134,16 +124,15 @@ export default {
         maxPrice: null,
         type: ""
       },
-      typeData: [],
       tableData: [],
       loading: true
     };
   },
+  components: {
+    typeSelector
+  },
   created() {
     let _this = this;
-    api.getGoodsType().then(res => {
-      _this.typeData = res.data;
-    });
     api.getGoods().then(res => {
       _this.tableData = _this.processTableData(res.data);
       _this.loading = false;
@@ -179,6 +168,9 @@ export default {
         }
       }
       return tableData;
+    },
+    getType(data) {
+      this.searchForm.type = data;
     },
     submitForm: function() {
       if (
