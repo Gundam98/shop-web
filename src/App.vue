@@ -42,6 +42,8 @@
               </el-avatar>
               <el-dropdown-menu slot="dropdown" trigger="click">
                 <el-dropdown-item command="profile">账户信息</el-dropdown-item>
+                <el-dropdown-item command="myBought">我买到的</el-dropdown-item>
+                <el-dropdown-item command="mySold">我出售的</el-dropdown-item>
                 <el-dropdown-item command="Deposit">充值</el-dropdown-item>
                 <el-dropdown-item command="logout">注销</el-dropdown-item>
               </el-dropdown-menu>
@@ -115,10 +117,10 @@ export default {
         .getCurUserId()
         .then(res => {
           if (res.data !== "") {
+            _this.login = true;
+            _this.show = true;
             api.getUserInfo(res.data).then(userInfo => {
               localStorage.username = userInfo.data.username;
-              _this.login = true;
-              _this.show = true;
             });
           } else {
             _this.login = false;
@@ -147,6 +149,10 @@ export default {
         }
       } else if (command === "Deposit") {
         this.$router.push("/Deposit").catch(err => err);
+      } else if (command === "myBought") {
+        this.$router.push("/myBought").catch(err => err);
+      } else if (command === "mySold") {
+        this.$router.push("/mySold").catch(err => err);
       } else {
         this.$message.error("系统出错啦");
       }
