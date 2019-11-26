@@ -68,13 +68,22 @@ const routes = [{
             import ("../views/Deposit.vue")
     },
     {
-        path: "/Mine",
-        name: "Mine",
+        path: "/MyBought",
+        name: "MyBought",
         meta: {
             requireAuth: true
         },
         component: () =>
-            import ("../views/Mine.vue")
+            import ("../views/MyBought.vue")
+    },
+    {
+        path: "/MySold",
+        name: "MySold",
+        meta: {
+            requireAuth: true
+        },
+        component: () =>
+            import ("../views/MySold.vue")
     },
     {
         path: "/AllGoods",
