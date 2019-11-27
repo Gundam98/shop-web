@@ -59,15 +59,6 @@ const routes = [{
             import ("../views/Register.vue")
     },
     {
-        path: "/Deposit",
-        name: "Deposit",
-        meta: {
-            requireAuth: true
-        },
-        component: () =>
-            import ("../views/Deposit.vue")
-    },
-    {
         path: "/MyBought",
         name: "MyBought",
         meta: {
