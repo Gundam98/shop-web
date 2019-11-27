@@ -12,13 +12,17 @@
           label-width="120px"
           :model="info"
           class="view"
-          v-if="!edit && !changePassword"
         >
           <el-form-item label="用户名">
             <el-input v-model="info.username" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item label="账户类型">
             <el-input v-model="info.typeStr" readOnly="true"></el-input>
+          </el-form-item>
+          <el-form-item label="余额">
+            <el-input v-model="info.money" readOnly="true">
+              <template slot="prepend">￥</template>
+            </el-input>
           </el-form-item>
           <el-form-item label="积分">
             <el-input v-model="info.score" readOnly="true"></el-input>
@@ -39,52 +43,20 @@
             <el-input v-model="info.modifierTimeStr" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item style="margin-top:20px;margin-bottom:0;text-align:left">
-            <el-button type="primary" @click="editInfo">修改信息</el-button>
-            <el-button type="primary" @click="editPassword">修改密码</el-button>
-          </el-form-item>
-        </el-form>
-
-        <el-form
-          label-position="right"
-          label-width="120px"
-          :model="edInfo"
-          class="view"
-          v-if="edit"
-        >
-          <el-form-item label="真实姓名">
-            <el-input v-model="edInfo.realName"></el-input>
-          </el-form-item>
-          <el-form-item label="电话">
-            <el-input v-model="edInfo.telephone"></el-input>
-          </el-form-item>
-          <el-form-item label="注册城市">
-            <el-input v-model="edInfo.registerCity"></el-input>
-          </el-form-item>
-          <el-form-item style="text-align:left">
-            <el-button type="primary" @click="submitInfo">提交</el-button>
-            <el-button type="primary" @click="back()">返回</el-button>
-          </el-form-item>
-        </el-form>
-
-        <el-form
-          label-position="right"
-          label-width="120px"
-          :model="password"
-          class="view"
-          v-if="changePassword"
-        >
-          <el-form-item label="原始密码">
-            <el-input v-model="password.origin" type="password"></el-input>
-          </el-form-item>
-          <el-form-item label="新密码">
-            <el-input v-model="password.new1" type="password"></el-input>
-          </el-form-item>
-          <el-form-item label="再次输入">
-            <el-input v-model="password.new2" type="password"></el-input>
-          </el-form-item>
-          <el-form-item style="text-align:left">
-            <el-button type="primary" @click="submitPassword">提交</el-button>
-            <el-button type="primary" @click="back()">返回</el-button>
+            <charge-button
+              style="margin-right:12px"
+              @charge="addMoney"
+            ></charge-button>
+            <modify-user-info-button
+              style="margin-right:12px"
+              :info="info"
+              @info="refreshInfo"
+            ></modify-user-info-button>
+            <modify-password-button
+              style="margin-right:12px"
+              :info="info"
+              @pass="changePassword"
+            ></modify-password-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -96,28 +68,35 @@
 import api from "@/utils/api";
 import _ from "lodash";
 import formatTime from "@/utils/formatTime";
+import chargeButton from "@/components/Deposit";
+import ModifyUserInfoButton from "@/components/ModifyUserInfo";
+import ModifyPasswordButton from "@/components/ModifyPassword";
+
 export default {
+  components: {
+    chargeButton,
+    ModifyUserInfoButton,
+    ModifyPasswordButton
+  },
   data() {
     return {
-      info: {},
-      edInfo: {},
-      password: {
-        origin: "",
-        new1: "",
-        new2: ""
-      },
-      edit: false,
-      changePassword: false
+      info: {}
     };
   },
   created() {
     let _this = this;
     api.getCurUserId().then(res => {
-      api.getUserInfo(res.data).then(res => {
-        let data = _this.processData(res.data);
-        _this.info = _.cloneDeep(data);
-        _this.edInfo = _.cloneDeep(data);
-      });
+      api
+        .getUserInfo(res.data)
+        .then(res => {
+          let data = _this.processData(res.data);
+          _this.info = data;
+        })
+        .then(() => {
+          api.getUserBalance().then(res => {
+            _this.$set(_this.info, "money", res.data);
+          });
+        });
     });
   },
   methods: {
@@ -131,74 +110,15 @@ export default {
       }
       return data;
     },
-    editInfo: function() {
-      this.edit = true;
+    addMoney(data) {
+      this.$set(this.info, "money", parseInt(this.info.money) + parseInt(data));
     },
-    editPassword: function() {
-      this.changePassword = true;
+    refreshInfo: function(data) {
+      data.modifierTimeStr = formatTime(data.modifierTime, "Y/M/D/ h:m:s");
+      Object.assign(this.info, data);
     },
-    back: function() {
-      for (let key in this.password) {
-        this.password[key] = "";
-      }
-      this.edInfo = _.cloneDeep(this.info);
-      this.edit = false;
-      this.changePassword = false;
-    },
-    submitInfo: function() {
-      let _this = this;
-      api
-        .changeUserInfo({
-          username: this.info.username,
-          password: this.info.password,
-          type: 0,
-          realName: this.edInfo.realName,
-          telephone: this.edInfo.telephone,
-          score: 0,
-          registerCity: this.edInfo.registerCity
-        })
-        .then(() => {
-          api.getCurUserId().then(res => {
-            api.getUserInfo(res.data).then(res => {
-              _this.info = _.cloneDeep(res.data);
-              _this.$message.success("修改成功");
-              _this.back();
-            });
-          });
-        })
-        .catch(err => {
-          console.log(err);
-          this.$message.error("修改失败");
-        });
-    },
-    submitPassword: function() {
-      let _this = this;
-      api
-        .changeUserInfo({
-          username: this.info.username,
-          password: this.password.new1,
-          type: 0,
-          realName: this.info.realName,
-          telephone: this.info.telephone,
-          score: 0,
-          registerCity: this.info.registerCity
-        })
-        .then(() => {
-          api.getCurUserId().then(res => {
-            api.getUserInfo(res.data).then(res => {
-              _this.info = _.cloneDeep(res.data);
-              for (let key in _this.password) {
-                _this.password[key] = "";
-              }
-              _this.$message.success("修改成功");
-              _this.back();
-            });
-          });
-        })
-        .catch(err => {
-          console.log(err);
-          this.$message.error("修改失败");
-        });
+    changePassword: function(data) {
+      this.$set(this.info, "password", data);
     }
   }
 };
