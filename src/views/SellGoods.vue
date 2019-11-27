@@ -138,7 +138,7 @@ export default {
       api
         .sellGoods(param)
         .then(res => {
-          _this.$message("上架成功");
+          _this.$message.success("上架成功");
           _this.$router.push("/").catch(e => e);
         })
         .catch(e => e);
