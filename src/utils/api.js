@@ -22,6 +22,10 @@ function getUserInfo(id) {
     return axios.get(`/user/${id}`);
 }
 
+function getUserBalance() {
+    return axios.get("/account/balance");
+}
+
 function getCurrentUserInfo() {
     return axios.get("/user/information/me");
 }
@@ -94,6 +98,10 @@ function refusePrice(id) {
     return axios.get(`/trade/refused/${id}`);
 }
 
+function chargeMoney(money) {
+    return axios.post(`/account/deposit/${money}`);
+}
+
 export default {
     getGoods,
     logout,
@@ -111,5 +119,7 @@ export default {
     offlineGoods,
     removeGoods,
     acceptPrice,
-    refusePrice
+    refusePrice,
+    getUserBalance,
+    chargeMoney
 };
