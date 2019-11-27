@@ -51,7 +51,7 @@
           </span>
         </div>
         <br />
-        <el-form :inline="true" v-if="goodsInfo.sellerUser !== curUser">
+        <el-form :inline="true" v-if="!isSeller">
           <el-form-item>
             <el-input v-model="bidPrice">
               <template slot="prepend">￥</template>
@@ -106,6 +106,13 @@ export default {
   },
   components: {
     countdown
+  },
+  computed: {
+    isSeller: function() {
+      if (!this.goodsInfo.sellerUser) return true;
+      if (this.curUser === this.goodsInfo.sellerUser) return true;
+      else return false;
+    }
   },
   async created() {
     let _this = this;
