@@ -22,7 +22,7 @@ function getUserInfo(id) {
     return axios.get(`/user/${id}`);
 }
 
-function getCurrentGoodsInfo() {
+function getCurrentUserInfo() {
     return axios.get("/user/information/me");
 }
 
@@ -74,6 +74,26 @@ function bid(id, price) {
     });
 }
 
+function onlineGoods(id) {
+    return axios.get(`/goods/continue/${id}`);
+}
+
+function offlineGoods(id) {
+    return axios.get(`/goods/discontinue/${id}`);
+}
+
+function removeGoods(id) {
+    return axios.delete(`/goods/${id}`);
+}
+
+function acceptPrice(id) {
+    return axios.get(`/trade/accept/${id}`);
+}
+
+function refusePrice(id) {
+    return axios.get(`/trade/refused/${id}`);
+}
+
 export default {
     getGoods,
     logout,
@@ -86,5 +106,10 @@ export default {
     changeUserInfo,
     bid,
     sellGoods,
-    getMySold
+    getMySold,
+    onlineGoods,
+    offlineGoods,
+    removeGoods,
+    acceptPrice,
+    refusePrice
 };
