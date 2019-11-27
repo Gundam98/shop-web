@@ -44,7 +44,7 @@
           width="100"
         ></el-table-column>
         <el-table-column
-          prop="overTime"
+          prop="overTimeStr"
           label="结束时间"
           width="200"
         ></el-table-column>
@@ -61,38 +61,84 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button-group>
-              <el-button
-                v-if="
-                  scope.row.statusName === '待重新上架' ||
-                    scope.row.statusName === '待竞价'
-                "
-                icon="el-icon-delete"
-              ></el-button>
-              <el-button
+              <el-tooltip
+                content="上架"
+                placement="bottom"
                 v-if="scope.row.statusName === '待重新上架'"
-                icon="el-icon-upload2"
-              ></el-button>
-              <el-button
-                v-if="scope.row.statusName === '待竞价'"
-                icon="el-icon-download"
               >
-              </el-button>
-              <el-button
+                <el-button
+                  icon="el-icon-upload2"
+                  type="primary"
+                  @click="online(scope.row, scope.$index)"
+                ></el-button>
+              </el-tooltip>
+
+              <el-tooltip
+                content="下架"
+                placement="bottom"
+                v-if="scope.row.statusName === '待竞价'"
+              >
+                <el-button
+                  icon="el-icon-download"
+                  type="primary"
+                  @click="offline(scope.row.id, scope.$index)"
+                >
+                </el-button>
+              </el-tooltip>
+
+              <el-tooltip
+                content="编辑"
+                placement="bottom"
                 v-if="
                   scope.row.statusName === '待重新上架' ||
                     scope.row.statusName === '待竞价'
                 "
-                icon="el-icon-edit"
-              ></el-button>
-              <el-button
-                v-if="scope.row.statusName === '待接受竞价'"
-                icon="el-icon-check"
-              ></el-button>
-              <el-button
-                v-if="scope.row.statusName === '待接受竞价'"
-                icon="el-icon-close"
               >
-              </el-button>
+                <el-button
+                  icon="el-icon-edit"
+                  type="warning"
+                  @click="edit(scope.row.id, scope.$index)"
+                ></el-button>
+              </el-tooltip>
+
+              <el-tooltip
+                content="删除"
+                placement="bottom"
+                v-if="
+                  scope.row.statusName === '待重新上架' ||
+                    scope.row.statusName === '待竞价'
+                "
+              >
+                <el-button
+                  icon="el-icon-delete"
+                  type="danger"
+                  @click="remove(scope.row.id, scope.$index)"
+                ></el-button>
+              </el-tooltip>
+
+              <el-tooltip
+                content="接受竞价"
+                placement="bottom"
+                v-if="scope.row.statusName === '待接受竞价'"
+              >
+                <el-button
+                  icon="el-icon-check"
+                  type="success"
+                  @click="accept(scope.row.id, scope.$index)"
+                ></el-button>
+              </el-tooltip>
+              <el-tooltip
+                content="拒绝竞价"
+                placement="bottom"
+                v-if="scope.row.statusName === '待接受竞价'"
+              >
+                <el-button
+                  icon="el-icon-close"
+                  type="danger"
+                  @click="refuse(scope.row.id, scope.$index)"
+                >
+                </el-button>
+              </el-tooltip>
             </el-button-group>
           </template>
         </el-table-column>
@@ -156,7 +202,7 @@ export default {
         //时间戳转时间字符串
         _this.$set(
           tableData[i],
-          "overTime",
+          "overTimeStr",
           formatTime(tableData[i].overTime, "Y/M/D/ h:m:s")
         );
 
@@ -171,6 +217,10 @@ export default {
           api.getUserInfo(tableData[i].currentBuyerUserId).then(res => {
             _this.$set(tableData[i], "currentBuyer", res.data.username);
           });
+        } else {
+          //填充暂无
+          _this.$set(tableData[i], "currentBuyer", "暂无");
+          _this.$set(tableData[i], "currentBuyerPrice", "暂无");
         }
 
         count++;
@@ -179,14 +229,77 @@ export default {
     },
     getImgUrl: function(url) {
       if (url) {
-        return `http://10.128.248.142:8081/picUrl/${url}`;
+        return `http://127.0.0.1:8081/picUrl/${url}`;
       } else {
         console.log("parse url failed");
         return undefined;
       }
     },
-    getGoodsUrl(id) {
+    getGoodsUrl: function(id) {
       return `/Goods/${id}`;
+    },
+    online: function(data, i) {
+      let _this = this;
+      console.log(data);
+      if (data.overTime <= new Date().getTime()) {
+        _this.$message.error("请修改结束时间后上架");
+        return;
+      } else {
+        api
+          .onlineGoods(data.id)
+          .then(res => {
+            _this.$set(_this.tableData[i], "statusName", "待竞价");
+            _this.$message.success("上架成功");
+          })
+          .catch(e => e);
+      }
+    },
+    offline: function(id, i) {
+      let _this = this;
+      api
+        .offlineGoods(id)
+        .then(res => {
+          _this.$set(_this.tableData[i], "statusName", "待重新上架");
+          _this.$message.success("下架成功");
+        })
+        .catch(e => e);
+    },
+    accept: function(id, i) {
+      let _this = this;
+      api
+        .acceptPrice(id)
+        .then(res => {
+          if (res.data) {
+            _this.$set(_this.tableData[i], "statusName", "已成交");
+            _this.$message.success("接受竞价成功");
+          } else {
+            _this.$message.warning("买方余额不足");
+          }
+        })
+        .catch(e => e);
+    },
+    refuse: function(id, i) {
+      let _this = this;
+      api
+        .refusePrice(id)
+        .then(res => {
+          _this.$set(_this.tableData[i], "statusName", "待重新上架");
+          _this.$message.success("拒绝竞价成功");
+        })
+        .catch(e => e);
+    },
+    remove: function(id, i) {
+      let _this = this;
+      api
+        .removeGoods(id)
+        .then(res => {
+          _this.tableData.splice(i, 1);
+          _this.$message.success("删除成功");
+        })
+        .catch(e => e);
+    },
+    edit: function(id, i) {
+      console.log(id);
     }
   }
 };
