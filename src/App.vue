@@ -108,7 +108,7 @@ export default {
     }
     setInterval(() => {
       this.check();
-    }, 1000);
+    }, 10000);
   },
   methods: {
     check() {
