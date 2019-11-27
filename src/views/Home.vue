@@ -164,6 +164,12 @@ export default {
           api.getGoodsType(tableData[i].type).then(res => {
             _this.$set(tableData[i], "typeName", res.data.typeName);
           });
+
+          //无竞拍价则填充暂无
+          if (tableData[i].currentBuyerPrice === null) {
+            _this.$set(tableData[i], "currentBuyerPrice", "暂无");
+          }
+
           count++;
         }
       }
@@ -205,7 +211,7 @@ export default {
     },
     getImgUrl: function(url) {
       if (url) {
-        return `http://10.128.248.142:8081/picUrl/${url}`;
+        return `http://127.0.0.1:8081/picUrl/${url}`;
       } else {
         console.log("parse url failed");
         return undefined;
