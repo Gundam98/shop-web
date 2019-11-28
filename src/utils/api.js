@@ -62,6 +62,12 @@ function sellGoods(data) {
     });
 }
 
+function updateGoods(id, data) {
+    return axios.put(`/goods/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" }
+    });
+}
+
 function getMySold() {
     return axios.get("/goods/my");
 }
