@@ -100,7 +100,6 @@
                   @click="edit(scope.row.id, scope.$index)"
                 ></el-button>
               </el-tooltip>
-
               <el-tooltip
                 content="删除"
                 placement="bottom"
@@ -299,7 +298,7 @@ export default {
         .catch(e => e);
     },
     edit: function(id, i) {
-      console.log(id);
+      this.$router.push(`/EditGoods/${id}`);
     }
   }
 };
