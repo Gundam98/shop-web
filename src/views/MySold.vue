@@ -239,7 +239,6 @@ export default {
     },
     online: function(data, i) {
       let _this = this;
-      console.log(data);
       if (data.overTime <= new Date().getTime()) {
         _this.$message.error("请修改结束时间后上架");
         return;
