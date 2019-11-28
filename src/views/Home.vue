@@ -88,7 +88,7 @@
         </el-table-column>
         <el-table-column prop="typeName" label="商品类型" width="100">
         </el-table-column>
-        <el-table-column prop="sellerName" label="卖家" width="150">
+        <el-table-column prop="sellerUserName" label="卖家" width="150">
         </el-table-column>
         <el-table-column
           prop="minPrice"
@@ -134,6 +134,7 @@ export default {
   created() {
     let _this = this;
     api.getGoods().then(res => {
+      // console.log(res.data);
       _this.tableData = _this.processTableData(res.data);
       _this.loading = false;
     });
@@ -156,14 +157,14 @@ export default {
           );
 
           //通过卖家id获取卖家名字
-          api.getUserInfo(tableData[i].sellerUserId).then(res => {
+          /*api.getUserInfo(tableData[i].sellerUserId).then(res => {
             _this.$set(tableData[i], "sellerName", res.data.username);
-          });
+          });*/
 
           //商品类型转换
-          api.getGoodsType(tableData[i].type).then(res => {
+          /*api.getGoodsType(tableData[i].type).then(res => {
             _this.$set(tableData[i], "typeName", res.data.typeName);
-          });
+          });*/
 
           //无竞拍价则填充暂无
           if (tableData[i].currentBuyerPrice === null) {
