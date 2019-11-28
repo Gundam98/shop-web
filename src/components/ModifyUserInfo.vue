@@ -7,8 +7,6 @@
       width="30%"
       center
     >
-      <el-alert title="以下信息可供修改" type="info" center> </el-alert>
-
       <el-form label-position="right" label-width="80px" :model="info">
         <el-form-item label="真实姓名" style="margin-bottom:15px">
           <el-input v-model="info.realName"></el-input>
