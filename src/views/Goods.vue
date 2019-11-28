@@ -116,7 +116,6 @@ export default {
     }
   },
   async created() {
-    let _this = this;
     this.curUser = localStorage.username;
     let res = await api.getGoodsInfo(this.$route.params.id);
     this.goodsInfo = this.processGoodsInfo(res.data);
