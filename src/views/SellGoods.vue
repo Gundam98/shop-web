@@ -7,7 +7,7 @@
         label-position="right"
         style="box-shadow:rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px; border-radius:5px; padding:20px; background-color:white"
       >
-        <div style="font-size:30px;margin-bottom:10px">填写出售商品信息</div>
+        <div style="font-size:30px;margin-bottom:10px">{{ title }}</div>
         <el-form
           :model="sellForm"
           ref="sellForm"
@@ -29,7 +29,10 @@
           </el-form-item>
 
           <el-form-item prop="type" label="商品类型" style="text-align:left">
-            <typeSelector @type="getType"></typeSelector>
+            <typeSelector
+              @type="getType"
+              :defaultType="sellForm.typeName"
+            ></typeSelector>
           </el-form-item>
           <el-form-item
             prop="overTime"
@@ -67,7 +70,9 @@
             </el-dialog>
           </el-form-item>
           <el-form-item style="margin-top:20px;margin-bottom:0;text-align:left">
-            <el-button type="primary" @click="upload">上架</el-button>
+            <el-button type="primary" @click="upload">
+              {{ uploadMsg }}
+            </el-button>
             <el-button type="primary" @click="resetForm">重置</el-button>
           </el-form-item>
         </el-form>
@@ -86,6 +91,8 @@ export default {
   },
   data() {
     return {
+      uploadMsg: "上架",
+      title: "填写商品信息",
       sellForm: {
         name: "",
         overTime: "",
@@ -119,6 +126,14 @@ export default {
       }
     };
   },
+  async created() {
+    if (this.$route.params.id) {
+      this.title = "修改商品信息";
+      this.uploadMsg = "修改";
+      let res = await api.getGoodsInfo(this.$route.params.id);
+      this.sellForm = res.data;
+    }
+  },
   methods: {
     upload: function() {
       let _this = this;
@@ -135,13 +150,20 @@ export default {
           param.append("file", temp[0]);
         }
       }
-      api
-        .sellGoods(param)
-        .then(res => {
-          _this.$message.success("上架成功");
-          _this.$router.push("/").catch(e => e);
-        })
-        .catch(e => e);
+      if (this.$route.params.id) {
+        api.updateGoods(this.$route.params.id, param).then(res => {
+          _this.$message.success("修改成功");
+          _this.$router.push("/MySold").catch(e => e);
+        });
+      } else {
+        api
+          .sellGoods(param)
+          .then(res => {
+            _this.$message.success("上架成功");
+            _this.$router.push("/MySold").catch(e => e);
+          })
+          .catch(e => e);
+      }
     },
     limitWarning: function() {
       this.$message.warning("最多允许上传9张照片");
@@ -175,8 +197,6 @@ export default {
       if (newPic) {
         this.sellForm.files.push(data.file);
       }
-
-      console.log("get out");
     }
   }
 };
