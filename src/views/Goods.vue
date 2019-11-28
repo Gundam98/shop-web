@@ -24,14 +24,14 @@
           <el-tag
             :type="tag.type"
             effect="dark"
-            size="small"
+            size="medium"
             style="margin-right:10px"
           >
             {{ tag.message }}
           </el-tag>
           <div style="font-size:40px">{{ goodsInfo.name }}</div>
         </div>
-        <div style="margin-bottom:20px;">
+        <div style="margin-bottom:20px;" v-if="!timeout">
           <span>
             距离结束还有<countdown
               :endTime="goodsInfo.overTime"
@@ -101,6 +101,7 @@ export default {
         type: "success",
         message: "竞拍中"
       },
+      timeout: false,
       curUser: ""
     };
   },
@@ -125,38 +126,46 @@ export default {
       let _this = this;
       let info = data;
       if (info.overTime < new Date().getTime()) {
-        this.tag = {
-          type: "error",
-          message: "竞拍结束"
-        };
-      } else {
-        //时间戳转时间字符串
-        info.modifiedTime = formatTime(info.modifiedTime, "Y/M/D/ h:m:s");
-
-        //通过卖家id获取卖家名字
-        api.getUserInfo(info.sellerUserId).then(res => {
-          _this.$set(_this.goodsInfo, "sellerUser", res.data.username);
-        });
-
-        //商品类型转换
-        api.getGoodsType(info.type).then(res => {
-          _this.$set(_this.goodsInfo, "type", res.data.typeName);
-        });
-
-        //通过竞价者id获取竞价者名字
-        if (info.currentBuyerUserId !== null) {
-          let _this = this;
-          api.getUserInfo(info.currentBuyerUserId).then(res => {
-            _this.$set(_this.goodsInfo, "currentBuyer", res.data.username);
-          });
+        this.timeout = true;
+        if (info.currentBuyerUserId) {
+          this.tag = {
+            type: "danger",
+            message: "已成交"
+          };
+        } else {
+          this.tag = {
+            type: "info",
+            message: "已结束"
+          };
         }
-        info.picUrl = `http://localhost:8081/picUrl/${info.picUrl}`;
-        /*for(let i = 0; i < _this.picUrl.length;i++){
+      }
+      //时间戳转时间字符串
+      info.modifiedTime = formatTime(info.modifiedTime, "Y/M/D/ h:m:s");
+
+      //通过卖家id获取卖家名字
+      api.getUserInfo(info.sellerUserId).then(res => {
+        _this.$set(_this.goodsInfo, "sellerUser", res.data.username);
+      });
+
+      //商品类型转换
+      api.getGoodsType(info.type).then(res => {
+        _this.$set(_this.goodsInfo, "type", res.data.typeName);
+      });
+
+      //通过竞价者id获取竞价者名字
+      if (info.currentBuyerUserId !== null) {
+        let _this = this;
+        api.getUserInfo(info.currentBuyerUserId).then(res => {
+          _this.$set(_this.goodsInfo, "currentBuyer", res.data.username);
+        });
+      }
+      info.picUrl = `http://localhost:8081/picUrl/${info.picUrl}`;
+      /*for(let i = 0; i < _this.picUrl.length;i++){
         (function(i) {
           _this.picUrl[i] = `http://localhost:8081/picUrl/${_this.picUrl[i]}`
         })(i)
       }*/
-      }
+
       return info;
     },
     bid() {
@@ -189,7 +198,7 @@ export default {
       });
     },
     goBack() {
-      this.$router.push("/").catch(e => e);
+      this.$router.go(-1);
     }
   }
 };
