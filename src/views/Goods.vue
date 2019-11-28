@@ -47,7 +47,7 @@
           </span>
           <span v-if="goodsInfo.currentBuyerPrice" style="padding-left:20px">
             <span style="color:grey">竞价用户</span>
-            {{ goodsInfo.currentBuyer }}
+            {{ goodsInfo.currentBuyerUserName }}
           </span>
         </div>
         <br />
@@ -69,7 +69,7 @@
           </span>
           <span style="margin-right:20px">
             <span style="color:grey">卖家</span>
-            {{ goodsInfo.sellerUser }}
+            {{ goodsInfo.sellerUserName }}
           </span>
           <span style="margin-right:20px">
             <span style="color:grey">上次修改时间</span>
@@ -110,8 +110,8 @@ export default {
   },
   computed: {
     isSeller: function() {
-      if (!this.goodsInfo.sellerUser) return true;
-      if (this.curUser === this.goodsInfo.sellerUser) return true;
+      if (!this.goodsInfo.sellerUserName) return true;
+      if (this.curUser === this.goodsInfo.sellerUserName) return true;
       else return false;
     }
   },
@@ -142,22 +142,22 @@ export default {
       info.modifiedTime = formatTime(info.modifiedTime, "Y/M/D/ h:m:s");
 
       //通过卖家id获取卖家名字
-      api.getUserInfo(info.sellerUserId).then(res => {
+      /*api.getUserInfo(info.sellerUserId).then(res => {
         _this.$set(_this.goodsInfo, "sellerUser", res.data.username);
-      });
+      });*/
 
       //商品类型转换
-      api.getGoodsType(info.type).then(res => {
-        _this.$set(_this.goodsInfo, "type", res.data.typeName);
-      });
+      /*api.getGoodsType(info.type).then(res => {
+        _this.$set(_this.goodsInfo, "typeName", res.data.typeName);
+      });*/
 
       //通过竞价者id获取竞价者名字
-      if (info.currentBuyerUserId !== null) {
+      /*if (info.currentBuyerUserId !== null) {
         let _this = this;
         api.getUserInfo(info.currentBuyerUserId).then(res => {
           _this.$set(_this.goodsInfo, "currentBuyer", res.data.username);
         });
-      }
+      }*/
       info.picUrl = `http://localhost:8081/picUrl/${info.picUrl}`;
       /*for(let i = 0; i < _this.picUrl.length;i++){
         (function(i) {
