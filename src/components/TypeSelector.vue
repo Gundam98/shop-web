@@ -17,15 +17,20 @@ export default {
     api.getGoodsType().then(res => {
       _this.typeData = res.data;
     });
+    this.type = this.defaultType;
+  },
+  props: {
+    defaultType: {
+      type: String,
+      default: ""
+    },
+    size: String
   },
   data() {
     return {
       typeData: {},
       type: ""
     };
-  },
-  props: {
-    size: String
   },
   watch: {
     type: function() {
