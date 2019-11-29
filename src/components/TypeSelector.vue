@@ -21,8 +21,8 @@ export default {
   },
   props: {
     defaultType: {
-      type: String,
-      default: ""
+      type: Number,
+      default: null
     },
     size: String
   },
