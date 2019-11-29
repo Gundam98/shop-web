@@ -35,11 +35,8 @@
               placeholder="联系电话"
             ></el-input>
           </el-form-item>
-          <el-form-item prop="registerCity">
-            <el-input
-              v-model="registerForm.registerCity"
-              placeholder="注册城市"
-            ></el-input>
+          <el-form-item prop="registerRegion" style="text-align:left">
+            <region-selector @region="chooseRegion"></region-selector>
           </el-form-item>
           <el-form-item style="margin-top:20px;margin-bottom:0">
             <el-row type="flex" justify="space-around">
@@ -59,6 +56,8 @@
 
 <script>
 import api from "@/utils/api";
+import regionSelector from "@/components/RegionSelector";
+
 export default {
   data() {
     return {
@@ -67,9 +66,12 @@ export default {
         password: "",
         realName: "",
         telephone: "",
-        registerCity: ""
+        registerRegion: ""
       }
     };
+  },
+  components: {
+    regionSelector
   },
   methods: {
     resetForm: function() {
@@ -86,6 +88,9 @@ export default {
         .catch(e => {
           _this.$message.warnming("注册失败");
         });
+    },
+    chooseRegion: function(data) {
+      this.$set(this.registerForm, "registerRegion", data);
     }
   }
 };
