@@ -44,7 +44,6 @@
                 <el-dropdown-item command="profile">账户信息</el-dropdown-item>
                 <el-dropdown-item command="myBought">我买到的</el-dropdown-item>
                 <el-dropdown-item command="mySold">我出售的</el-dropdown-item>
-                <el-dropdown-item command="Deposit">充值</el-dropdown-item>
                 <el-dropdown-item command="logout">注销</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -81,7 +80,7 @@
           </div>
         </el-aside>
         <el-main>
-          <router-view></router-view>
+          <router-view @login="check"></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -147,8 +146,6 @@ export default {
         } else {
           this.$message.error("注销失败");
         }
-      } else if (command === "Deposit") {
-        this.$router.push("/Deposit").catch(err => err);
       } else if (command === "myBought") {
         this.$router.push("/myBought").catch(err => err);
       } else if (command === "mySold") {
