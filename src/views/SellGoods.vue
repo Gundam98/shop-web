@@ -32,7 +32,7 @@
             <typeSelector
               v-if="sellForm.type || newGoods"
               @type="getType"
-              :defaultType="sellForm.type"
+              :defaultType="sellForm.type || null"
             ></typeSelector>
           </el-form-item>
           <el-form-item
@@ -145,16 +145,21 @@ export default {
       this.$refs.files.submit();
       let param = new FormData();
       for (let i in this.sellForm) {
-        if (i !== "files" || this.sellForm[i] !== null) {
-          param.append(i, this.sellForm[i]);
+        if (i === "files") {
+          console.log("get in");
+          this.sellForm[i].forEach(file => {
+            param.append("pics", file);
+          });
+          /*let temp = this.sellForm[i];
+          param.append("file", temp[0]);*/
         } else {
-          // this.sellForm[i].forEach(files=>{
-          //   param.append(i,files);
-          // })
-          let temp = this.sellForm[i];
-          param.append("file", temp[0]);
+          param.append(i, this.sellForm[i]);
         }
       }
+      //console.log(this.sellForm.files);
+      //console.log(param.getAll("pics"));
+      //console.log(param.getAll("name"));
+
       if (this.$route.params.id) {
         api
           .updateGoods(this.$route.params.id, param)
