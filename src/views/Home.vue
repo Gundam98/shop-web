@@ -65,8 +65,8 @@
         <el-table-column width="200">
           <template slot-scope="scope">
             <el-image
-              :src="getImgUrl(scope.row.picUrl)"
-              :preview-src-list="[getImgUrl(scope.row.picUrl)]"
+              :src="getImgUrl(scope.row.id)"
+              :preview-src-list="[getImgUrl(scope.row.id)]"
               fit="contain"
             />
           </template>
@@ -78,10 +78,7 @@
           show-overflow-tooltip
         >
           <template slot-scope="scope">
-            <router-link
-              :to="getGoodsUrl(scope.row.id)"
-              style="text-decoration:none;color:black"
-            >
+            <router-link :to="getGoodsUrl(scope.row.id)" class="name">
               {{ scope.row.name }}
             </router-link>
           </template>
@@ -210,9 +207,9 @@ export default {
     resetForm: function() {
       this.$refs["searchForm"].resetFields();
     },
-    getImgUrl: function(url) {
-      if (url) {
-        return `http://127.0.0.1:8081/picUrl/${url}`;
+    getImgUrl: function(id) {
+      if (id) {
+        return `http://127.0.0.1:8081/goodsResource/${id}/pic/0`;
       } else {
         console.log("parse url failed");
         return undefined;
@@ -240,5 +237,20 @@ export default {
 .displayTable {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px;
   margin: 10px;
+}
+
+.name:link {
+  text-decoration: none;
+  color: black;
+}
+
+.name:visited {
+  text-decoration: none;
+  color: black;
+}
+
+.name:hover {
+  color: red;
+  text-decoration: underline red;
 }
 </style>
