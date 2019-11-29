@@ -24,17 +24,14 @@
               <template slot="prepend">￥</template>
             </el-input>
           </el-form-item>
-          <el-form-item label="积分">
-            <el-input v-model="info.score" readOnly="true"></el-input>
-          </el-form-item>
           <el-form-item label="真实姓名">
             <el-input v-model="info.realName" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item label="电话">
             <el-input v-model="info.telephone" readOnly="true"></el-input>
           </el-form-item>
-          <el-form-item label="注册城市">
-            <el-input v-model="info.registerCity" readOnly="true"></el-input>
+          <el-form-item label="注册地区">
+            <el-input v-model="info.registerRegion" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item label="注册时间">
             <el-input v-model="info.registerTimeStr" readOnly="true"></el-input>
@@ -44,17 +41,20 @@
           </el-form-item>
           <el-form-item style="margin-top:20px;margin-bottom:0;text-align:left">
             <charge-button
+              v-if="info !== {}"
               style="margin-right:12px"
               @charge="addMoney"
             ></charge-button>
             <modify-user-info-button
+              v-if="info.realName"
               style="margin-right:12px"
-              :info="info"
+              :infoProp="info"
               @info="refreshInfo"
             ></modify-user-info-button>
             <modify-password-button
+              v-if="info.realName"
               style="margin-right:12px"
-              :info="info"
+              :infoProp="info"
               @pass="changePassword"
             ></modify-password-button>
           </el-form-item>
