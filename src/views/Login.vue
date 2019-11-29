@@ -60,6 +60,7 @@ export default {
         .then(res => {
           localStorage.username = this.loginForm.name;
           this.$message.success("登陆成功");
+          this.$emit("login");
           this.$router.push("/").catch(err => err);
         })
         .catch(() => {
