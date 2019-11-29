@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import { MessageBox } from "element-ui";
 
 Vue.use(VueRouter);
 
@@ -115,9 +116,18 @@ router.beforeEach((to, from, next) => {
             next();
         } else {
             // 没登录则跳转到登录界面
-            next({
-                path: "/Login",
-                query: { redirect: to.fullPath }
+            MessageBox.alert("", "尚未登陆", {
+                confirmButtonText: "确定",
+                callback: () => {
+                    next({
+                        path: "/Login",
+                        query: {
+                            redirect: to.fullPath
+                        }
+                    });
+                },
+                type: "warning",
+                center: "true"
             });
         }
     } else {
