@@ -65,7 +65,7 @@
         <el-table-column width="200">
           <template slot-scope="scope">
             <el-image
-              :src="getImgUrl(scope.row.id)"
+              :src="getImgUrl(scope.row.id, scope.row.picUrlList[0])"
               :preview-src-list="[getImgUrl(scope.row.id)]"
               fit="contain"
             />
@@ -207,9 +207,9 @@ export default {
     resetForm: function() {
       this.$refs["searchForm"].resetFields();
     },
-    getImgUrl: function(id) {
+    getImgUrl: function(id, url) {
       if (id) {
-        return `http://127.0.0.1:8081/goodsResource/${id}/pic/0`;
+        return `http://127.0.0.1:8081/goodsResource/${id}/pic/${url}`;
       } else {
         console.log("parse url failed");
         return undefined;
