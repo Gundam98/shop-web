@@ -15,7 +15,11 @@
           <el-input v-model="info.telephone"></el-input>
         </el-form-item>
         <el-form-item label="注册城市">
-          <el-input v-model="info.registerCity"></el-input>
+          <region-selector
+            v-if="info.registerRegion"
+            @region="chooseRegion"
+            :defaultRegion="info.registerRegion"
+          ></region-selector>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -28,28 +32,38 @@
 
 <script>
 import api from "@/utils/api";
+import regionSelector from "@/components/RegionSelector";
+import _ from "lodash";
 
 export default {
+  components: {
+    regionSelector
+  },
   props: {
-    info: {
+    infoProp: {
       type: Object,
       default: function() {
         return {
           realName: "",
           telephone: "",
-          registerCity: ""
+          registerRegion: ""
         };
       }
     }
   },
+  created() {
+    this.info = _.cloneDeep(this.infoProp);
+  },
   data() {
     return {
+      info: { realName: "", telephone: "", registerRegion: "" },
       dialogVisible: false
     };
   },
   methods: {
     submitInfo: function() {
       let _this = this;
+      console.log(this.info);
       api
         .changeUserInfo({
           ...this.info,
@@ -69,6 +83,9 @@ export default {
           console.log(err);
           this.$message.error("修改失败");
         });
+    },
+    chooseRegion: function(data) {
+      this.$set(this.info, "registerRegion", data);
     }
   }
 };

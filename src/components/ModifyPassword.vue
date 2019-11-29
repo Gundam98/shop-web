@@ -40,10 +40,14 @@ import api from "@/utils/api";
 
 export default {
   props: {
-    info: Object
+    infoProp: Object
+  },
+  created() {
+    this.info = this.infoProp;
   },
   data() {
     return {
+      info: {},
       password: { origin: "", new1: "", new2: "" },
       dialogVisible: false
     };
