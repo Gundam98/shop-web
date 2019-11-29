@@ -54,7 +54,7 @@
           width="100"
         ></el-table-column>
         <el-table-column
-          prop="currentBuyer"
+          prop="currentBuyerUserName"
           label="出价者"
           width="100"
         ></el-table-column>
@@ -206,19 +206,19 @@ export default {
         );
 
         //商品类型转换
-        api.getGoodsType(tableData[i].type).then(res => {
+        /*api.getGoodsType(tableData[i].type).then(res => {
           _this.$set(tableData[i], "typeName", res.data.typeName);
-        });
+        });*/
 
         //通过竞价者id获取竞价者名字
         if (tableData[i].currentBuyerUserId !== null) {
-          let _this = this;
+          /*let _this = this;
           api.getUserInfo(tableData[i].currentBuyerUserId).then(res => {
             _this.$set(tableData[i], "currentBuyer", res.data.username);
-          });
+          });*/
         } else {
           //填充暂无
-          _this.$set(tableData[i], "currentBuyer", "暂无");
+          _this.$set(tableData[i], "currentBuyerUserName", "暂无");
           _this.$set(tableData[i], "currentBuyerPrice", "暂无");
         }
 
