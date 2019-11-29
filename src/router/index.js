@@ -11,13 +11,13 @@ const routes = [{
         component: Home
     },
     {
-        path: "/WantToBuy",
-        name: "WantToBuy",
+        path: "/Demand",
+        name: "DemandHome",
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-            import ("../views/WantToBuy.vue")
+            import ("../views/DemandHome.vue")
     },
     {
         path: "/Profile",
@@ -47,13 +47,13 @@ const routes = [{
             import ("../views/SellGoods.vue")
     },
     {
-        path: "/wantToBuyGoods",
-        name: "WantToBuyGoods",
+        path: "/DemandGoods",
+        name: "DemandGoods",
         meta: {
             requireAuth: true
         },
         component: () =>
-            import ("../views/WantToBuyGoods.vue")
+            import ("../views/DemandGoods.vue")
     },
     {
         path: "/Login",
@@ -100,6 +100,12 @@ const routes = [{
         name: "Goods",
         component: () =>
             import ("../views/Goods.vue")
+    },
+    {
+        path: "/Demand/:id",
+        name: "Demand",
+        component: () =>
+            import ("../views/Demand.vue")
     }
 ];
 
