@@ -30,8 +30,9 @@
 
           <el-form-item prop="type" label="商品类型" style="text-align:left">
             <typeSelector
+              v-if="sellForm.type || newGoods"
               @type="getType"
-              :defaultType="sellForm.typeName"
+              :defaultType="sellForm.type"
             ></typeSelector>
           </el-form-item>
           <el-form-item
@@ -91,6 +92,7 @@ export default {
   },
   data() {
     return {
+      newGoods: true,
       uploadMsg: "上架",
       title: "填写商品信息",
       sellForm: {
@@ -130,8 +132,11 @@ export default {
     if (this.$route.params.id) {
       this.title = "修改商品信息";
       this.uploadMsg = "修改";
+      this.newGoods = false;
       let res = await api.getGoodsInfo(this.$route.params.id);
-      this.sellForm = res.data;
+      for (let key in this.sellForm) {
+        if (res.data[key]) this.sellForm[key] = res.data[key];
+      }
     }
   },
   methods: {
@@ -140,7 +145,7 @@ export default {
       this.$refs.files.submit();
       let param = new FormData();
       for (let i in this.sellForm) {
-        if (i !== "files") {
+        if (i !== "files" || this.sellForm[i] !== null) {
           param.append(i, this.sellForm[i]);
         } else {
           // this.sellForm[i].forEach(files=>{
@@ -151,10 +156,13 @@ export default {
         }
       }
       if (this.$route.params.id) {
-        api.updateGoods(this.$route.params.id, param).then(res => {
-          _this.$message.success("修改成功");
-          _this.$router.push("/MySold").catch(e => e);
-        });
+        api
+          .updateGoods(this.$route.params.id, param)
+          .then(res => {
+            _this.$message.success("修改成功");
+            _this.$router.push("/MySold").catch(e => e);
+          })
+          .catch(e => e);
       } else {
         api
           .sellGoods(param)
