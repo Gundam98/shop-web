@@ -112,8 +112,8 @@ function chargeMoney(money) {
     return axios.post(`/account/deposit/${money}`);
 }
 
-function getDemand() {
-    return axios.get("/demand");
+function getDemand(data) {
+    return axios.get("/demand", data);
 }
 
 function getDemandInfo(id) {
