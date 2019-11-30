@@ -166,34 +166,6 @@ export default {
 
       return info;
     },
-    bid() {
-      if (new Date(this.demandInfo.overTime) < new Date().getTime()) {
-        this.$message.warning("竞拍已结束");
-        this.$router.push("/").catch(e => e);
-        return;
-      }
-      if (
-        !this.demandInfo.currentBuyerPrice &&
-        this.demandInfo.minPrice > this.bidPrice
-      ) {
-        this.$message.warning("出价至少高于最低价");
-        return;
-      }
-      if (
-        this.demandInfo.currentBuyerPrice &&
-        this.demandInfo.currentBuyerPrice > this.bidPrice
-      ) {
-        this.$message.warning("出价至少高于当前价");
-        return;
-      }
-      let _this = this;
-      api.bid(this.demandInfo.id, this.bidPrice).then(res => {
-        _this.demandInfo.currentBuyerPrice = _this.bidPrice;
-        _this.bidPrice = null;
-        _this.demandInfo.currentBuyer = localStorage.username;
-        _this.$message.success("竞价成功");
-      });
-    },
     goBack() {
       this.$router.go(-1);
     },
