@@ -10,6 +10,14 @@ function getGoods(data) {
     });
 }
 
+function getMyBought() {
+    return axios.get("/goods/bought");
+}
+
+function getMyDemand() {
+    return axios.get("/demand/my");
+}
+
 function getGoodsInfo(id) {
     return axios.get(`/goods/${id}`);
 }
@@ -113,11 +121,18 @@ function chargeMoney(money) {
 }
 
 function getDemand(data) {
-    return axios.get("/demand", data);
+    return axios.get("/demand", {
+        params: data
+    });
 }
 
 function getDemandInfo(id) {
     return axios.get(`/demand/${id}`);
+}
+
+function updateDemand(id, data) {
+    console.log(data);
+    return axios.put(`/demand/${id}`, data);
 }
 
 function recommendGoods(id, data) {
@@ -126,6 +141,10 @@ function recommendGoods(id, data) {
 
 function uploadDemand(data) {
     return axios.post("/demand", data);
+}
+
+function removeDemand(id) {
+    return axios.delete(`/demand/${id}`);
 }
 
 export default {
@@ -153,5 +172,9 @@ export default {
     updateGoods,
     getDemandInfo,
     recommendGoods,
-    uploadDemand
+    uploadDemand,
+    getMyBought,
+    getMyDemand,
+    removeDemand,
+    updateDemand
 };
