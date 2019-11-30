@@ -11,6 +11,15 @@ const routes = [{
         component: Home
     },
     {
+        path: "/MyDemand",
+        name: "MyDemand",
+        meta: {
+            requireAuth: true
+        },
+        component: () =>
+            import ("../views/MyDemand.vue")
+    },
+    {
         path: "/Demand",
         name: "DemandHome",
         // route level code-splitting
@@ -108,11 +117,10 @@ const routes = [{
             import ("../views/Demand.vue")
     },
     {
-        path: "/MyDemand",
-        name: "MyDemand",
-        component: () => {
-            import ("../views/MyDemand.vue");
-        }
+        path: "/DemandGoods/:id",
+        name: "DemandGoods",
+        component: () =>
+            import ("../views/DemandGoods.vue")
     }
 ];
 
