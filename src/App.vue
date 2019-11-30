@@ -25,10 +25,10 @@
               v-show="show"
             >
               <el-menu-item index="/DemandGoods">
-                我要买
+                发布求购
               </el-menu-item>
               <el-menu-item index="/SellGoods">
-                我要卖
+                发布商品
               </el-menu-item>
             </el-menu>
             <el-dropdown
@@ -41,9 +41,10 @@
                 <img src="./assets/head.png" />
               </el-avatar>
               <el-dropdown-menu slot="dropdown" trigger="click">
-                <el-dropdown-item command="profile">账户信息</el-dropdown-item>
-                <el-dropdown-item command="myBought">我买到的</el-dropdown-item>
-                <el-dropdown-item command="mySold">我出售的</el-dropdown-item>
+                <el-dropdown-item command="Profile">账户信息</el-dropdown-item>
+                <el-dropdown-item command="MyBought">我买到的</el-dropdown-item>
+                <el-dropdown-item command="MySold">我出售的</el-dropdown-item>
+                <el-dropdown-item command="MyDemand">我求购的</el-dropdown-item>
                 <el-dropdown-item command="logout">注销</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -68,10 +69,10 @@
               style="height:100%"
             >
               <el-menu-item index="/">
-                主页
+                购买区
               </el-menu-item>
               <el-menu-item index="/Demand">
-                求购
+                求购区
               </el-menu-item>
               <el-menu-item index="/AllGoods">
                 所有商品
@@ -145,9 +146,7 @@ export default {
         });
     },
     handleProfileCommand(command) {
-      if (command === "profile") {
-        this.$router.push("/Profile").catch(err => err);
-      } else if (command === "logout") {
+      if (command === "logout") {
         if (api.logout()) {
           localStorage.clear();
           this.show = false;
@@ -157,12 +156,8 @@ export default {
         } else {
           this.$message.error("注销失败");
         }
-      } else if (command === "myBought") {
-        this.$router.push("/myBought").catch(err => err);
-      } else if (command === "mySold") {
-        this.$router.push("/mySold").catch(err => err);
       } else {
-        this.$message.error("系统出错啦");
+        this.$router.push(`/${command}`).catch(err => err);
       }
     }
   }
