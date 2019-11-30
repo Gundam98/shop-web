@@ -108,7 +108,7 @@ import formatTime from "@/utils/formatTime";
 import typeSelector from "@/components/TypeSelector";
 
 export default {
-  name: "home",
+  name: "demandHome",
   data() {
     return {
       searchForm: {
@@ -198,10 +198,6 @@ export default {
 </script>
 
 <style scoped>
-.el-form-item {
-  margin: 10px;
-}
-
 .name:link {
   text-decoration: none;
   color: black;
