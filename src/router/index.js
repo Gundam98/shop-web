@@ -106,6 +106,13 @@ const routes = [{
         name: "Demand",
         component: () =>
             import ("../views/Demand.vue")
+    },
+    {
+        path: "/MyDemand",
+        name: "MyDemand",
+        component: () => {
+            import ("../views/MyDemand.vue");
+        }
     }
 ];
 
