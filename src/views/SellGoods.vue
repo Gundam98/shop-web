@@ -146,7 +146,6 @@ export default {
       let param = new FormData();
       for (let i in this.sellForm) {
         if (i === "files") {
-          console.log("get in");
           this.sellForm[i].forEach(file => {
             param.append("pics", file);
           });
