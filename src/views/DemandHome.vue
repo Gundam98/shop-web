@@ -124,7 +124,7 @@ export default {
   created() {
     let _this = this;
     api.getDemand().then(res => {
-      console.log(res.data);
+      //console.log(res.data);
       _this.tableData = _this.processTableData(res.data);
       _this.loading = false;
     });
