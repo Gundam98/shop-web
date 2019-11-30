@@ -5,13 +5,14 @@
       <el-col :span="10" style="padding:20px">
         <el-carousel>
           <el-carousel-item
-            v-for="(url, index) in [goodsInfo.picUrl]"
+            v-for="(url, index) in goodsInfo.picUrl"
             :key="index"
           >
             <el-image
-              v-if="goodsInfo.picUrl"
-              :src="goodsInfo.picUrl"
-              fit="contain"
+              v-if="url"
+              :src="url"
+              fit="fill"
+              :preview-src-list="getImgUrlList(goodsInfo.picUrl, index)"
             ></el-image>
           </el-carousel-item>
         </el-carousel>
@@ -34,7 +35,7 @@
         <div style="margin-bottom:20px;" v-if="!timeout">
           <span>
             距离结束还有<countdown
-              :endTime="goodsInfo.overTime"
+              :endTime="goodsInfo.overTimeStr"
               style="color:red"
             >
             </countdown>
@@ -115,15 +116,17 @@ export default {
       else return false;
     }
   },
-  async created() {
+  created() {
     this.curUser = localStorage.username;
-    let res = await api.getGoodsInfo(this.$route.params.id);
-    this.goodsInfo = this.processGoodsInfo(res.data);
+    let _this = this;
+    api.getGoodsInfo(this.$route.params.id).then(res => {
+      _this.goodsInfo = _this.processGoodsInfo(res.data);
+    });
   },
   methods: {
     processGoodsInfo: function(data) {
-      let _this = this;
       let info = data;
+      // console.log(info);
       if (info.overTime < new Date().getTime()) {
         this.timeout = true;
         if (info.currentBuyerUserId) {
@@ -139,35 +142,27 @@ export default {
         }
       }
       //时间戳转时间字符串
-      info.modifiedTime = formatTime(info.modifiedTime, "Y/M/D/ h:m:s");
+      info.modifiedTimeStr = formatTime(info.modifiedTime, "Y/M/D/ h:m:s");
 
-      //通过卖家id获取卖家名字
-      /*api.getUserInfo(info.sellerUserId).then(res => {
-        _this.$set(_this.goodsInfo, "sellerUser", res.data.username);
-      });*/
-
-      //商品类型转换
-      /*api.getGoodsType(info.type).then(res => {
-        _this.$set(_this.goodsInfo, "typeName", res.data.typeName);
-      });*/
-
-      //通过竞价者id获取竞价者名字
-      /*if (info.currentBuyerUserId !== null) {
-        let _this = this;
-        api.getUserInfo(info.currentBuyerUserId).then(res => {
-          _this.$set(_this.goodsInfo, "currentBuyer", res.data.username);
-        });
-      }*/
-      info.picUrl = `http://localhost:8081/picUrl/${info.picUrl}`;
-      /*for(let i = 0; i < _this.picUrl.length;i++){
+      //info.picUrl = `http://localhost:8081/picUrl/${info.picUrl}`;
+      info.picUrl = [];
+      for (let i = 0; i < info.picUrlList.length; i++) {
         (function(i) {
-          _this.picUrl[i] = `http://localhost:8081/picUrl/${_this.picUrl[i]}`
-        })(i)
-      }*/
+          info.picUrl.push(
+            `http://127.0.0.1:8081/goodsResource/${info.id}/pic/${info.picUrlList[i]}`
+          );
+        })(i);
+      }
 
       return info;
     },
-    bid() {
+    getImgUrlList: function(list, index) {
+      let r1 = list.slice(0, index).reverse();
+      let r2 = list.slice(index, list.length).reverse();
+      let result = [...r1, ...r2];
+      return result.reverse();
+    },
+    bid: function() {
       if (new Date(this.goodsInfo.overTime) < new Date().getTime()) {
         this.$message.warning("竞拍已结束");
         this.$router.push("/").catch(e => e);
