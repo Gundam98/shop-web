@@ -5,7 +5,15 @@
 </template>
 
 <script>
-export default {};
+import api from "@/utils/api";
+
+export default {
+  created() {
+    api.getMyBought().then(res => {
+      console.log(res);
+    });
+  }
+};
 </script>
 
 <style></style>
