@@ -24,7 +24,7 @@
               v-if="login"
               v-show="show"
             >
-              <el-menu-item index="/WantToBuyGoods">
+              <el-menu-item index="/DemandGoods">
                 我要买
               </el-menu-item>
               <el-menu-item index="/SellGoods">
@@ -70,7 +70,7 @@
               <el-menu-item index="/">
                 主页
               </el-menu-item>
-              <el-menu-item index="/WantToBuy">
+              <el-menu-item index="/Demand">
                 求购
               </el-menu-item>
               <el-menu-item index="/AllGoods">
@@ -91,11 +91,16 @@
 import api from "@/utils/api";
 export default {
   name: "app",
-  components: {},
+  provide() {
+    return {
+      reload: this.reload
+    };
+  },
   data() {
     return {
       login: false,
-      show: true
+      show: true,
+      isRouterAlive: true
     };
   },
   created() {
@@ -110,6 +115,12 @@ export default {
     }, 10000);
   },
   methods: {
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(() => {
+        this.isRouterAlive = true;
+      });
+    },
     check() {
       let _this = this;
       api
