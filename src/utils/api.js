@@ -14,6 +14,10 @@ function getGoodsInfo(id) {
     return axios.get(`/goods/${id}`);
 }
 
+function getStatus() {
+    return axios.get("/stat");
+}
+
 function getCurUserId() {
     return axios.get("/user/session");
 }
@@ -108,7 +112,24 @@ function chargeMoney(money) {
     return axios.post(`/account/deposit/${money}`);
 }
 
+function getDemand() {
+    return axios.get("/demand");
+}
+
+function getDemandInfo(id) {
+    return axios.get(`/demand/${id}`);
+}
+
+function recommendGoods(id, data) {
+    return axios.put(`/demand/offer/${id}`, data);
+}
+
+function uploadDemand(data) {
+    return axios.post("/demand", data);
+}
+
 export default {
+    getDemand,
     getGoods,
     logout,
     login,
@@ -127,5 +148,10 @@ export default {
     acceptPrice,
     refusePrice,
     getUserBalance,
-    chargeMoney
+    chargeMoney,
+    getStatus,
+    updateGoods,
+    getDemandInfo,
+    recommendGoods,
+    uploadDemand
 };
