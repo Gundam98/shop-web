@@ -90,10 +90,10 @@ export default {
 
       if (this.$route.params.id) {
         api
-          .updateGoods(this.$route.params.id)
+          .updateDemand(this.$route.params.id, this.demandForm)
           .then(res => {
             _this.$message.success("修改成功");
-            _this.$router.push("/MySold").catch(e => e);
+            _this.$router.push("/MyDemand").catch(e => e);
           })
           .catch(e => e);
       } else {
