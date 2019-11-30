@@ -61,6 +61,7 @@
           width="320"
           trigger="click"
           v-model="visible"
+          v-if="!isDemander"
         >
           <el-form :inline="true">
             <el-form-item>
@@ -116,7 +117,7 @@ export default {
   },
   computed: {
     isDemander: function() {
-      if (!this.demandInfo.publisherUserName) return true;
+      if (!this.demandInfo.publisherUserName) return false;
       if (this.curUser === this.demandInfo.publisherUserName) return true;
       else return false;
     }
