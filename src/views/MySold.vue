@@ -13,8 +13,10 @@
         <el-table-column width="200">
           <template slot-scope="scope">
             <el-image
-              :src="getImgUrl(scope.row.picUrl)"
-              :preview-src-list="[getImgUrl(scope.row.picUrl)]"
+              :src="getHeadImgUrl(scope.row.id, scope.row.picUrlList[0])"
+              :preview-src-list="
+                getImgUrlList(scope.row.id, scope.row.picUrlList)
+              "
               fit="contain"
             />
           </template>
@@ -205,11 +207,6 @@ export default {
           formatTime(tableData[i].overTime, "Y/M/D/ h:m:s")
         );
 
-        //商品类型转换
-        /*api.getGoodsType(tableData[i].type).then(res => {
-          _this.$set(tableData[i], "typeName", res.data.typeName);
-        });*/
-
         //通过竞价者id获取竞价者名字
         if (tableData[i].currentBuyerUserId !== null) {
           /*let _this = this;
@@ -226,13 +223,20 @@ export default {
       }
       return tableData;
     },
-    getImgUrl: function(url) {
-      if (url) {
-        return `http://127.0.0.1:8081/picUrl/${url}`;
+    getHeadImgUrl: function(id, url) {
+      if (id) {
+        return `http://127.0.0.1:8081/goodsResource/${id}/pic/${url}`;
       } else {
-        console.log("parse url failed");
+        // console.log("parse url failed");
         return undefined;
       }
+    },
+    getImgUrlList: function(id, urlList) {
+      let list = [];
+      urlList.forEach(element => {
+        list.push(`http://127.0.0.1:8081/goodsResource/${id}/pic/${element}`);
+      });
+      return list;
     },
     getGoodsUrl: function(id) {
       return `/Goods/${id}`;
