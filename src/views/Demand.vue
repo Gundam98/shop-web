@@ -136,10 +136,11 @@ export default {
       let _this = this;
       api
         .recommendGoods(this.demandInfo.id, {
-          goodsId: this.sellerGoodsId
+          goodsId: this.sellerGoodsId,
+          demandId: this.demandInfo.id
         })
         .then(res => {
-          console.log(res);
+          // console.log(res);
           _this.visible = false;
           _this.$message.success("提交成功");
           let goodsName = "";
