@@ -54,7 +54,7 @@
         <br />
         <el-form :inline="true" v-if="!isSeller && !timeout">
           <el-form-item>
-            <el-input v-model="bidPrice">
+            <el-input v-model="bidPrice" clearable>
               <template slot="prepend">￥</template>
             </el-input>
           </el-form-item>

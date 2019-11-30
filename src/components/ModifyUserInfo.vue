@@ -9,10 +9,10 @@
     >
       <el-form label-position="right" label-width="80px" :model="info">
         <el-form-item label="真实姓名" style="margin-bottom:15px">
-          <el-input v-model="info.realName"></el-input>
+          <el-input v-model="info.realName" clearable></el-input>
         </el-form-item>
         <el-form-item label="电话" style="margin-bottom:15px">
-          <el-input v-model="info.telephone"></el-input>
+          <el-input v-model="info.telephone" clearable></el-input>
         </el-form-item>
         <el-form-item label="注册城市">
           <region-selector

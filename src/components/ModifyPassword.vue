@@ -14,13 +14,25 @@
         class="view"
       >
         <el-form-item label="原始密码" style="margin-bottom:15px">
-          <el-input v-model="password.origin" type="password"></el-input>
+          <el-input
+            v-model="password.origin"
+            type="password"
+            clearable
+          ></el-input>
         </el-form-item>
         <el-form-item label="新密码" style="margin-bottom:15px">
-          <el-input v-model="password.new1" type="password"></el-input>
+          <el-input
+            v-model="password.new1"
+            type="password"
+            clearable
+          ></el-input>
         </el-form-item>
         <el-form-item label="再次输入">
-          <el-input v-model="password.new2" type="password"></el-input>
+          <el-input
+            v-model="password.new2"
+            type="password"
+            clearable
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

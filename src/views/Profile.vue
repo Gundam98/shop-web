@@ -14,30 +14,58 @@
           class="view"
         >
           <el-form-item label="用户名">
-            <el-input v-model="info.username" readOnly="true"></el-input>
+            <el-input
+              v-model="info.username"
+              readOnly="true"
+              clearable
+            ></el-input>
           </el-form-item>
           <el-form-item label="账户类型">
-            <el-input v-model="info.typeStr" readOnly="true"></el-input>
+            <el-input
+              v-model="info.typeStr"
+              readOnly="true"
+              clearable
+            ></el-input>
           </el-form-item>
           <el-form-item label="余额">
-            <el-input v-model="info.money" readOnly="true">
+            <el-input v-model="info.money" readOnly="true" clearable>
               <template slot="prepend">￥</template>
             </el-input>
           </el-form-item>
           <el-form-item label="真实姓名">
-            <el-input v-model="info.realName" readOnly="true"></el-input>
+            <el-input
+              v-model="info.realName"
+              readOnly="true"
+              clearable
+            ></el-input>
           </el-form-item>
           <el-form-item label="电话">
-            <el-input v-model="info.telephone" readOnly="true"></el-input>
+            <el-input
+              v-model="info.telephone"
+              readOnly="true"
+              clearable
+            ></el-input>
           </el-form-item>
           <el-form-item label="注册地区">
-            <el-input v-model="info.registerRegion" readOnly="true"></el-input>
+            <el-input
+              v-model="info.registerRegion"
+              readOnly="true"
+              clearable
+            ></el-input>
           </el-form-item>
           <el-form-item label="注册时间">
-            <el-input v-model="info.registerTimeStr" readOnly="true"></el-input>
+            <el-input
+              v-model="info.registerTimeStr"
+              readOnly="true"
+              clearable
+            ></el-input>
           </el-form-item>
           <el-form-item label="上次修改时间">
-            <el-input v-model="info.modifierTimeStr" readOnly="true"></el-input>
+            <el-input
+              v-model="info.modifierTimeStr"
+              readOnly="true"
+              clearable
+            ></el-input>
           </el-form-item>
           <el-form-item style="margin-top:20px;margin-bottom:0;text-align:left">
             <charge-button

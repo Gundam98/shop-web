@@ -16,15 +16,20 @@
           label-width="80px"
         >
           <el-form-item prop="name" label="商品名">
-            <el-input v-model="sellForm.name"></el-input>
+            <el-input v-model="sellForm.name" clearable></el-input>
           </el-form-item>
           <el-form-item prop="minPrice" label="起拍价">
-            <el-input v-model="sellForm.minPrice" type="number">
+            <el-input v-model="sellForm.minPrice" type="number" clearable>
               <template slot="prepend">￥</template>
             </el-input>
           </el-form-item>
           <el-form-item prop="description" label="商品描述">
-            <el-input v-model="sellForm.description" type="textarea" :rows="2">
+            <el-input
+              v-model="sellForm.description"
+              type="textarea"
+              :rows="2"
+              clearable
+            >
             </el-input>
           </el-form-item>
 

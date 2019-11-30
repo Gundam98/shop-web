@@ -8,6 +8,7 @@
             placeholder="商品名"
             size="small"
             style="width:100px"
+            clearable
           ></el-input>
         </el-form-item>
         <el-form-item label="商品类型:" prop="type">
@@ -23,6 +24,7 @@
                   type="number"
                   size="small"
                   style="width:100px"
+                  clearable
                 >
                 </el-input>
               </el-form-item>
@@ -36,6 +38,7 @@
                   type="number"
                   size="small"
                   style="width:100px"
+                  clearable
                 >
                 </el-input>
               </el-form-item>

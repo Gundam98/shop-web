@@ -8,6 +8,7 @@
             placeholder="商品名"
             size="small"
             style="width:100px"
+            clearable
           ></el-input>
         </el-form-item>
         <el-form-item label="商品类型:" prop="type">
@@ -19,10 +20,11 @@
               <el-form-item prop="minPrice" style="margin-top:0">
                 <el-input
                   v-model="searchForm.minPrice"
-                  placeholder="起拍价"
+                  placeholder="最低价"
                   type="number"
                   size="small"
                   style="width:100px"
+                  clearable
                 >
                 </el-input>
               </el-form-item>
@@ -36,6 +38,7 @@
                   type="number"
                   size="small"
                   style="width:100px"
+                  clearable
                 >
                 </el-input>
               </el-form-item>
@@ -136,34 +139,20 @@ export default {
       let count = 0;
       while (count < tableData.length) {
         let i = count;
-        if (tableData[i].overTime < new Date().getTime()) {
-          tableData.splice(i, 1);
-        } else {
-          //时间戳转时间字符串
-          _this.$set(
-            tableData[i],
-            "createTimeStr",
-            formatTime(tableData[i].createTime, "Y/M/D/ h:m:s")
-          );
 
-          _this.$set(
-            tableData[i],
-            "offerGoodsIdListCount",
-            tableData[i].offerGoodsIdList.length
-          );
+        //时间戳转时间字符串
+        _this.$set(
+          tableData[i],
+          "createTimeStr",
+          formatTime(tableData[i].createTime, "Y/M/D/ h:m:s")
+        );
 
-          //通过卖家id获取卖家名字
-          /*api.getUserInfo(tableData[i].sellerUserId).then(res => {
-            _this.$set(tableData[i], "sellerName", res.data.username);
-          });*/
-
-          //商品类型转换
-          /*api.getGoodsType(tableData[i].type).then(res => {
-            _this.$set(tableData[i], "typeName", res.data.typeName);
-          });*/
-
-          count++;
-        }
+        _this.$set(
+          tableData[i],
+          "offerGoodsIdListCount",
+          tableData[i].offerGoodsIdList.length
+        );
+        count++;
       }
       return tableData;
     },
@@ -180,7 +169,7 @@ export default {
         let _this = this;
         this.loading = true;
         api
-          .getGoods({
+          .getDemand({
             name: this.searchForm.name || null,
             minPrice: this.searchForm.minPrice,
             maxPrice: this.searchForm.maxPrice,

@@ -8,7 +8,7 @@
       ref="dialog"
       center
     >
-      <el-input placeholder="充值金额" type="number" v-model="money">
+      <el-input placeholder="充值金额" type="number" v-model="money" clearable>
         <template slot="prepend">￥</template>
       </el-input>
       <span slot="footer" class="dialog-footer">

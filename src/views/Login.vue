@@ -14,6 +14,7 @@
               <el-input
                 v-model="loginForm.name"
                 placeholder="用户名"
+                clearable
               ></el-input>
             </el-form-item>
             <el-form-item>
@@ -21,6 +22,7 @@
                 v-model="loginForm.password"
                 placeholder="密码"
                 type="password"
+                clearable
               >
               </el-input>
             </el-form-item>

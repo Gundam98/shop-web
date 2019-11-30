@@ -13,6 +13,7 @@
             <el-input
               v-model="registerForm.username"
               placeholder="用户名"
+              clearable
             ></el-input>
           </el-form-item>
           <el-form-item prop="password">
@@ -20,6 +21,7 @@
               v-model="registerForm.password"
               placeholder="密码"
               type="password"
+              clearable
             >
             </el-input>
           </el-form-item>
@@ -27,12 +29,14 @@
             <el-input
               v-model="registerForm.realName"
               placeholder="真实姓名"
+              clearable
             ></el-input>
           </el-form-item>
           <el-form-item prop="telephone">
             <el-input
               v-model="registerForm.telephone"
               placeholder="联系电话"
+              clearable
             ></el-input>
           </el-form-item>
           <el-form-item prop="registerRegion" style="text-align:left">

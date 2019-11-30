@@ -16,10 +16,10 @@
           label-width="80px"
         >
           <el-form-item prop="name" label="商品名">
-            <el-input v-model="demandForm.name"></el-input>
+            <el-input v-model="demandForm.name" clearable></el-input>
           </el-form-item>
           <el-form-item prop="idealPrice" label="心理价位">
-            <el-input v-model="demandForm.idealPrice" type="number">
+            <el-input v-model="demandForm.idealPrice" type="number" clearable>
               <template slot="prepend">￥</template>
             </el-input>
           </el-form-item>
@@ -28,6 +28,7 @@
               v-model="demandForm.description"
               type="textarea"
               :rows="2"
+              clearable
             >
             </el-input>
           </el-form-item>
