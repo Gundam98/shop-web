@@ -35,7 +35,7 @@
         <div style="margin-bottom:20px;" v-if="!timeout">
           <span>
             距离结束还有<countdown
-              :endTime="goodsInfo.overTimeStr"
+              :endTime="goodsInfo.overTime"
               style="color:red"
             >
             </countdown>
@@ -74,7 +74,7 @@
           </span>
           <span style="margin-right:20px">
             <span style="color:grey">上次修改时间</span>
-            {{ goodsInfo.modifiedTime }}
+            {{ goodsInfo.modifiedTimeStr }}
           </span>
         </div>
       </el-col>
