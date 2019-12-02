@@ -12,7 +12,11 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="商品类型:" prop="type">
-          <type-selector size="small" @type="getType"></type-selector>
+          <type-selector
+            size="small"
+            @type="getType"
+            v-if="refresh"
+          ></type-selector>
         </el-form-item>
         <el-form-item label="价格区间:">
           <el-row>
@@ -118,7 +122,8 @@ export default {
         type: ""
       },
       tableData: [],
-      loading: true
+      loading: true,
+      refresh: true
     };
   },
   components: {
@@ -188,6 +193,10 @@ export default {
       }
     },
     resetForm: function() {
+      this.refresh = false;
+      this.$nextTick(() => {
+        this.refresh = true;
+      });
       this.$refs["searchForm"].resetFields();
     },
     getDemandUrl(id) {
@@ -196,32 +205,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.name:link {
-  text-decoration: none;
-  color: black;
-}
-
-.name:visited {
-  text-decoration: none;
-  color: black;
-}
-
-.name:hover {
-  color: red;
-  text-decoration: underline red;
-}
-
-.search {
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px;
-  border-radius: 5px;
-  margin: 10px;
-  background-color: white;
-}
-
-.displayTable {
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px;
-  margin: 10px;
-}
-</style>

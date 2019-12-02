@@ -12,7 +12,11 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="商品类型:" prop="type">
-          <typeSelector size="small" @type="getType"></typeSelector>
+          <typeSelector
+            size="small"
+            @type="getType"
+            v-if="refresh"
+          ></typeSelector>
         </el-form-item>
         <el-form-item label="价格区间:">
           <el-row>
@@ -87,15 +91,15 @@
         </el-table-column>
         <el-table-column prop="typeName" label="商品类型" width="100">
         </el-table-column>
-        <el-table-column prop="sellerUserName" label="卖家" width="150">
+        <el-table-column prop="sellerUserName" label="卖家" width="100">
         </el-table-column>
         <el-table-column
           prop="minPrice"
-          label="最低价"
-          width="100"
+          label="最低价/一口价"
+          width="150"
         ></el-table-column>
         <el-table-column
-          prop="overTime"
+          prop="overTimeStr"
           label="结束时间"
           width="250"
         ></el-table-column>
@@ -124,7 +128,8 @@ export default {
         type: ""
       },
       tableData: [],
-      loading: true
+      loading: true,
+      refresh: true
     };
   },
   components: {
@@ -145,25 +150,24 @@ export default {
       let count = 0;
       while (count < tableData.length) {
         let i = count;
-        if (tableData[i].overTime < new Date().getTime()) {
+        if (
+          tableData[i].status === 2 ||
+          (tableData[i].overTime < new Date().getTime() &&
+            tableData[i].isBidMode == "true")
+        ) {
+          //已成交或者竞价结束的商品删除
           tableData.splice(i, 1);
         } else {
           //时间戳转时间字符串
-          _this.$set(
-            tableData[i],
-            "overTime",
-            formatTime(tableData[i].overTime, "Y/M/D/ h:m:s")
-          );
-
-          //通过卖家id获取卖家名字
-          /*api.getUserInfo(tableData[i].sellerUserId).then(res => {
-            _this.$set(tableData[i], "sellerName", res.data.username);
-          });*/
-
-          //商品类型转换
-          /*api.getGoodsType(tableData[i].type).then(res => {
-            _this.$set(tableData[i], "typeName", res.data.typeName);
-          });*/
+          if (tableData[i].overTime) {
+            _this.$set(
+              tableData[i],
+              "overTimeStr",
+              formatTime(tableData[i].overTime, "Y/M/D/ h:m:s")
+            );
+          } else {
+            _this.$set(tableData[i], "overTimeStr", "无");
+          }
 
           //无竞拍价则填充暂无
           if (tableData[i].currentBuyerPrice === null) {
@@ -207,6 +211,10 @@ export default {
       }
     },
     resetForm: function() {
+      this.refresh = false;
+      this.$nextTick(() => {
+        this.refresh = true;
+      });
       this.$refs["searchForm"].resetFields();
     },
     getHeadImgUrl: function(id, url) {
@@ -231,7 +239,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .el-form-item {
   margin: 10px;
 }
