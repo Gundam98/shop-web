@@ -10,6 +10,10 @@ function getGoods(data) {
     });
 }
 
+function buy(id) {
+    return axios.post(`/trade/buy/${id}`);
+}
+
 function getMyBought() {
     return axios.get("/goods/bought");
 }
@@ -191,5 +195,6 @@ export default {
     updateDemand,
     updateParam,
     getAllStatistics,
-    getDetailStatistics
+    getDetailStatistics,
+    buy
 };
