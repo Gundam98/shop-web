@@ -11,7 +11,7 @@
       <detail-chart
         :chartData="detailData"
         :regionName="regionName"
-        
+        v-if="detailData && regionName"
       ></detail-chart>
     </div>
   </div>
@@ -51,8 +51,6 @@ export default {
     checkDetailData: function(name) {
       let _this = this;
       if (name !== this.regionName) {
-        this.regionName = null;
-        this.detailData = null;
         api.getDetailStatistics(6).then(res => {
           res.data.forEach(region => {
             if (region.name === name) {

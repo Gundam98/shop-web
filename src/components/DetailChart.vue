@@ -3,6 +3,7 @@
 </template>
 <script>
 import echarts from "echarts";
+import formatTime from "@/utils/formatTime";
 
 export default {
   name: "detailChart",
@@ -26,7 +27,11 @@ export default {
   },
   watch: {
     regionName: function() {
-      console.log("changed");
+      this.data = [];
+      this.xAxisData = [];
+      this.commissionSumData = [];
+      this.dealCountData = [];
+      this.userCountData = [];
       this.processData();
       this.chinaConfigure();
     }
@@ -41,10 +46,15 @@ export default {
   methods: {
     processData: function() {
       this.chartData.forEach(data => {
+        this.xAxisData.push(formatTime(data.endTime, "M-D"));
         this.commissionSumData.push(data.commissionSum);
         this.dealCountData.push(data.dealCount);
         this.userCountData.push(data.userCount);
       });
+      this.xAxisData.reverse();
+      this.commissionSumData.reverse();
+      this.dealCountData.reverse();
+      this.userCountData.reverse();
     },
     chinaConfigure: function() {
       let _this = this;
