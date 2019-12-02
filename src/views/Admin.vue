@@ -77,11 +77,14 @@ export default {
   padding: 10px;
   height: 95%;
   width: 55%;
+  background-color: #bedbf9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
 
 .detailChart {
   padding: 10px;
   height: 95%;
   width: 40%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
 </style>

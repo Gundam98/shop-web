@@ -58,9 +58,11 @@ export default {
     },
     chinaConfigure: function() {
       let _this = this;
+      let colors = ["#5793f3", "#d14a61", "#675bba"];
       let myChart = echarts.init(this.$refs.detailChart); //这里是为了获得容器所在位置
       window.onresize = myChart.resize;
       myChart.setOption({
+        color: colors,
         title: {
           text: _this.regionName
         },
@@ -73,6 +75,9 @@ export default {
             }
           }
         },
+        grid: {
+          right: "20%"
+        },
         toolbox: {
           feature: {
             dataView: { show: true, readOnly: false },
@@ -81,7 +86,7 @@ export default {
           }
         },
         legend: {
-          data: ["蒸发量", "降水量", "平均温度"]
+          data: ["成交量", "收益", "新增用户"]
         },
         xAxis: [
           {
@@ -99,8 +104,14 @@ export default {
             min: 0,
             max: 200,
             interval: 25,
+            position: "right",
             axisLabel: {
               formatter: "{value}笔"
+            },
+            axisLine: {
+              lineStyle: {
+                color: colors[0]
+              }
             }
           },
           {
@@ -109,8 +120,31 @@ export default {
             min: 0,
             max: 2000,
             interval: 250,
+            position: "right",
+            offset: 50,
             axisLabel: {
               formatter: "{value}元"
+            },
+            axisLine: {
+              lineStyle: {
+                color: colors[1]
+              }
+            }
+          },
+          {
+            type: "value",
+            name: "新增用户",
+            min: 0,
+            max: 200,
+            interval: 25,
+            position: "left",
+            axisLabel: {
+              formatter: "{value}人"
+            },
+            axisLine: {
+              lineStyle: {
+                color: colors[2]
+              }
             }
           }
         ],
