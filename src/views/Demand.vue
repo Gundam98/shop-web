@@ -123,7 +123,7 @@ export default {
     }
   },
   async created() {
-    this.curUser = localStorage.username;
+    this.curUser = sessionStorage.username;
     let res = await api.getDemandInfo(this.$route.params.id);
     this.demandInfo = this.processDemandInfo(res.data);
     for (const id of this.demandInfo.offerGoodsIdList) {

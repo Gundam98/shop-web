@@ -11,6 +11,15 @@ const routes = [{
         component: Home
     },
     {
+        path: "/AdjustParam",
+        name: "AdjustParam",
+        meta: {
+            requireAuth: true
+        },
+        component: () =>
+            import ("../views/AdjustParam.vue")
+    },
+    {
         path: "/MyDemand",
         name: "MyDemand",
         meta: {
@@ -118,9 +127,15 @@ const routes = [{
     },
     {
         path: "/DemandGoods/:id",
-        name: "DemandGoods",
+        name: "EditDemand",
         component: () =>
             import ("../views/DemandGoods.vue")
+    },
+    {
+        path: "/Admin",
+        name: "Admin",
+        component: () =>
+            import ("../views/Admin.vue")
     }
 ];
 
@@ -132,7 +147,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if (to.matched.some(res => res.meta.requireAuth)) {
         // 判断是否需要登录权限
-        if (localStorage.getItem("username")) {
+        if (sessionStorage.getItem("username")) {
             // 判断是否登录
             next();
         } else {

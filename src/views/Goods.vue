@@ -84,7 +84,17 @@
       <el-tab-pane label="商品描述" name="description">
         <p style="text-align: left">{{ goodsInfo.description }}</p>
       </el-tab-pane>
-      <el-tab-pane label="服务说明" name="service">服务说明</el-tab-pane>
+      <el-tab-pane label="服务说明" name="service">
+        <p style="text-align: left">
+          不同等级会有不同的中介费率：每次交易收取的中介费=物品价格*中介费率。
+        </p>
+        <p style="text-align: left">
+          每次交易，用户等级会增长。增长值和收取的中介费有关：用户等级增长=本次交易中介费*成长率
+        </p>
+        <p style="text-align: left">
+          平台方对成长率和不同等级的中介费有更改的权力。
+        </p>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -117,7 +127,7 @@ export default {
     }
   },
   created() {
-    this.curUser = localStorage.username;
+    this.curUser = sessionStorage.username;
     let _this = this;
     api.getGoodsInfo(this.$route.params.id).then(res => {
       _this.goodsInfo = _this.processGoodsInfo(res.data);
@@ -187,7 +197,7 @@ export default {
       api.bid(this.goodsInfo.id, this.bidPrice).then(res => {
         _this.goodsInfo.currentBuyerPrice = _this.bidPrice;
         _this.bidPrice = null;
-        _this.goodsInfo.currentBuyer = localStorage.username;
+        _this.$set(_this.goodsInfo, "currentBuyer", sessionStorage.username);
         _this.$message.success("竞价成功");
       });
     },

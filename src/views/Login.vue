@@ -60,7 +60,7 @@ export default {
       api
         .login(this.loginForm)
         .then(res => {
-          localStorage.username = this.loginForm.name;
+          sessionStorage.username = this.loginForm.name;
           this.$message.success("登陆成功");
           this.$emit("login");
           this.$router.push("/").catch(err => err);

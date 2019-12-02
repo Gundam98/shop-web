@@ -32,6 +32,17 @@
               <template slot="prepend">￥</template>
             </el-input>
           </el-form-item>
+          <el-form-item label="用户等级" style="text-align:left">
+            <el-rate
+              v-model="info.level"
+              disabled
+              show-score
+              text-color="#ff9900"
+              score-template="{value}"
+              style="padding:10px 0"
+            >
+            </el-rate>
+          </el-form-item>
           <el-form-item label="真实姓名">
             <el-input
               v-model="info.realName"
@@ -129,13 +140,20 @@ export default {
   },
   methods: {
     processData: function(data) {
+      //将时间戳转换成时间
       data.registerTimeStr = formatTime(data.registerTime, "Y/M/D/ h:m:s");
       data.modifierTimeStr = formatTime(data.modifierTime, "Y/M/D/ h:m:s");
+
+      //用户类型
       if (data.type === 0) {
         data.typeStr = "普通账户";
       } else {
         data.typeStr = "管理员";
       }
+
+      //将用户等级调整为一位小数
+      data.level = Math.floor(data.level * 10) / 10;
+
       return data;
     },
     addMoney(data) {

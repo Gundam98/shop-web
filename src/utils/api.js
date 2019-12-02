@@ -22,8 +22,12 @@ function getGoodsInfo(id) {
     return axios.get(`/goods/${id}`);
 }
 
-function getStatus() {
-    return axios.get("/stat");
+function getAllStatistics() {
+    return axios.get("/admin/0");
+}
+
+function getDetailStatistics(count) {
+    return axios.get(`/admin/${count}`);
 }
 
 function getCurUserId() {
@@ -147,7 +151,16 @@ function removeDemand(id) {
     return axios.delete(`/demand/${id}`);
 }
 
+function getParam() {
+    return axios.get("/admin/param");
+}
+
+function updateParam(data) {
+    return axios.put("/admin/param", data);
+}
+
 export default {
+    getParam,
     getDemand,
     getGoods,
     logout,
@@ -168,7 +181,6 @@ export default {
     refusePrice,
     getUserBalance,
     chargeMoney,
-    getStatus,
     updateGoods,
     getDemandInfo,
     recommendGoods,
@@ -176,5 +188,8 @@ export default {
     getMyBought,
     getMyDemand,
     removeDemand,
-    updateDemand
+    updateDemand,
+    updateParam,
+    getAllStatistics,
+    getDetailStatistics
 };

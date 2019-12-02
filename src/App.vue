@@ -24,11 +24,14 @@
               v-if="login"
               v-show="show"
             >
-              <el-menu-item index="/DemandGoods">
+              <el-menu-item index="/DemandGoods" v-if="userType === 0">
                 发布求购
               </el-menu-item>
-              <el-menu-item index="/SellGoods">
+              <el-menu-item index="/SellGoods" v-if="userType === 0">
                 发布商品
+              </el-menu-item>
+              <el-menu-item index="/AdjustParam" v-if="userType === 1">
+                调整参数
               </el-menu-item>
             </el-menu>
             <el-dropdown
@@ -42,9 +45,15 @@
               </el-avatar>
               <el-dropdown-menu slot="dropdown" trigger="click">
                 <el-dropdown-item command="Profile">账户信息</el-dropdown-item>
-                <el-dropdown-item command="MyBought">我买到的</el-dropdown-item>
-                <el-dropdown-item command="MySold">我出售的</el-dropdown-item>
-                <el-dropdown-item command="MyDemand">我求购的</el-dropdown-item>
+                <el-dropdown-item command="MyBought" v-if="userType === 0">
+                  我买到的
+                </el-dropdown-item>
+                <el-dropdown-item command="MySold" v-if="userType === 0">
+                  我出售的
+                </el-dropdown-item>
+                <el-dropdown-item command="MyDemand" v-if="userType === 0">
+                  我求购的
+                </el-dropdown-item>
                 <el-dropdown-item command="logout">注销</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -74,8 +83,11 @@
               <el-menu-item index="/Demand">
                 求购区
               </el-menu-item>
-              <el-menu-item index="/AllGoods">
+              <el-menu-item index="/AllGoods" v-if="userType === 1">
                 所有商品
+              </el-menu-item>
+              <el-menu-item index="/Admin" v-if="userType === 1">
+                平台数据
               </el-menu-item>
             </el-menu>
           </div>
@@ -101,16 +113,12 @@ export default {
     return {
       login: false,
       show: true,
-      isRouterAlive: true
+      isRouterAlive: true,
+      userType: 0
     };
   },
   created() {
-    if (localStorage.getItem("username")) {
-      this.login = true;
-      this.show = true;
-    } else {
-      this.check();
-    }
+    this.check();
     setInterval(() => {
       this.check();
     }, 10000);
@@ -130,25 +138,28 @@ export default {
           if (res.data !== "") {
             _this.login = true;
             _this.show = true;
-            api.getUserInfo(res.data).then(userInfo => {
-              localStorage.username = userInfo.data.username;
+            api.getUserInfo(res.data).then(res => {
+              // console.log(res.data);
+              sessionStorage.username = res.data.username;
+              _this.userType = res.data.type;
             });
           } else {
             _this.login = false;
             _this.show = false;
-            localStorage.clear();
+            _this.userType = 0;
+            sessionStorage.clear();
           }
         })
         .catch(() => {
           _this.login = false;
           _this.show = false;
-          localStorage.clear();
+          sessionStorage.clear();
         });
     },
     handleProfileCommand(command) {
       if (command === "logout") {
         if (api.logout()) {
-          localStorage.clear();
+          sessionStorage.clear();
           this.show = false;
           this.login = false;
           this.$message.success("注销成功");
@@ -209,9 +220,5 @@ img {
   height: auto;
   max-width: 100%;
   max-height: 100%;
-}
-
-[v-cloak] {
-  display: none;
 }
 </style>

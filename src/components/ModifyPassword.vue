@@ -39,7 +39,7 @@
         <el-button type="primary" @click="submitPassword" :info="info">
           提交
         </el-button>
-        <el-button type="primary" @click="dialogVisible = false">
+        <el-button @click="dialogVisible = false">
           取消
         </el-button>
       </span>
