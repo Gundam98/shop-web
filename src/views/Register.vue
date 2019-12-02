@@ -8,7 +8,12 @@
         style="box-shadow:rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px; border-radius:5px; padding:20px; background-color:white"
       >
         <div style="font-size:30px;margin-bottom:10px">注册</div>
-        <el-form :model="registerForm" :ref="registerForm" status-icon>
+        <el-form
+          :model="registerForm"
+          :ref="registerForm"
+          status-icon
+          :rules="rules"
+        >
           <el-form-item prop="username">
             <el-input
               v-model="registerForm.username"
@@ -64,6 +69,13 @@ import regionSelector from "@/components/RegionSelector";
 
 export default {
   data() {
+    let checkPhoneNumber = (rule, value, callback) => {
+      if (isNaN(value)) return callback(new Error("请输入电话号码"));
+      else {
+        if (value.toString().length !== 8 || value.toString().length !== 11)
+          return callback(new Error("仅支持11位手机号码或者8位电话号码"));
+      }
+    };
     return {
       registerForm: {
         username: "",
@@ -71,6 +83,21 @@ export default {
         realName: "",
         telephone: "",
         registerRegion: ""
+      },
+      rules: {
+        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        realName: [
+          { required: true, message: "请输入真实姓名", trigger: "blur" }
+        ],
+        telephone: [
+          {
+            required: true,
+            message: "请输入手机号",
+            trigger: "blur"
+          },
+          { validator: checkPhoneNumber, trigger: "blur" }
+        ]
       }
     };
   },
@@ -83,6 +110,12 @@ export default {
     },
     register: function() {
       let _this = this;
+      for (let key in this.registerForm) {
+        if (!this.registerForm[key]) {
+          this.$message.warning("信息填写不完整");
+          return;
+        }
+      }
       api
         .register(this.registerForm)
         .then(res => {

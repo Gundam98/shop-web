@@ -55,7 +55,10 @@
           </span>
         </div>
         <br />
-        <el-form :inline="true" v-if="!isSeller && (!timeout || !isBidMode)">
+        <el-form
+          :inline="true"
+          v-if="!isSeller && (!timeout || !isBidMode) && !isDeal"
+        >
           <el-form-item v-if="isBidMode">
             <el-input v-model="bidPrice" clearable>
               <template slot="prepend">￥</template>
@@ -121,7 +124,8 @@ export default {
       timeout: true,
       curUser: "",
       isBidMode: false,
-      bidButtonText: "购买"
+      bidButtonText: "购买",
+      isDeal: false
     };
   },
   components: {
@@ -171,6 +175,9 @@ export default {
           type: "primary",
           message: "一口价"
         };
+        if (this.status === 2) {
+          this.isDeal = true;
+        }
       }
 
       //时间戳转时间字符串
@@ -235,6 +242,11 @@ export default {
       } else {
         api.buy(this.goodsInfo.id).then(res => {
           if (res.data === true) {
+            _this.tag = {
+              type: "danger",
+              message: "已成交"
+            };
+            _this.isDeal = true;
             _this.$message.success("购买成功");
           } else {
             _this.$message.warning("余额不足，购买失败");

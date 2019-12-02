@@ -14,11 +14,12 @@
           status-icon
           label-position="right"
           label-width="80px"
+          :rules="rules"
         >
           <el-form-item prop="name" label="商品名">
             <el-input v-model="sellForm.name" clearable></el-input>
           </el-form-item>
-          <el-form-item prop="isbidMode" style="text-align:left">
+          <el-form-item prop="isBidMode" style="text-align:left">
             <el-switch
               v-model="sellForm.isBidMode"
               active-text="拍卖"
@@ -142,6 +143,17 @@ export default {
             }
           }
         ]
+      },
+      rules: {
+        name: [{ required: true, message: "请填写商品名", trigger: "blur" }],
+        minPrice: [
+          { required: true, message: "请输入最低价/一口价", trigger: "blur" }
+        ],
+        isBidMode: [
+          { required: true, trigger: "blur", message: "请选择出售形式" }
+        ],
+        files: [{ required: true, message: "请插入文件", trigger: "blur" }],
+        type: [{ required: true, message: "请选择商品类型" }]
       }
     };
   },
@@ -179,12 +191,16 @@ export default {
       this.$refs.files.submit();
       let param = new FormData();
       for (let i in this.sellForm) {
+        if (!this.sellForm[i]) {
+          this.$message.warning("信息填写不完整");
+          return;
+        }
         if (i === "files") {
           this.sellForm[i].forEach(file => {
             param.append("pics", file);
           });
         } else {
-          console.log(this.sellForm[i]);
+          // console.log(this.sellForm[i]);
           param.append(i, this.sellForm[i]);
         }
       }

@@ -88,6 +88,13 @@ export default {
     upload: function() {
       let _this = this;
 
+      for (let key in this.demandForm) {
+        if (!this.demandForm[key]) {
+          this.$message.warning("信息填写不完整");
+          return;
+        }
+      }
+
       if (this.$route.params.id) {
         api
           .updateDemand(this.$route.params.id, this.demandForm)

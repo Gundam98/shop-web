@@ -8,16 +8,16 @@
         style="box-shadow:rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px; border-radius:5px; padding:20px; background-color:white"
       >
         <div style="font-size:30px;margin-bottom:10px">登陆</div>
-        <el-form :model="loginForm" status-icon>
+        <el-form :model="loginForm" status-icon :rules="rules">
           <div>
-            <el-form-item>
+            <el-form-item prop="name">
               <el-input
                 v-model="loginForm.name"
                 placeholder="用户名"
                 clearable
               ></el-input>
             </el-form-item>
-            <el-form-item>
+            <el-form-item prop="password">
               <el-input
                 v-model="loginForm.password"
                 placeholder="密码"
@@ -52,6 +52,10 @@ export default {
       loginForm: {
         name: "",
         password: ""
+      },
+      rules: {
+        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
   },
