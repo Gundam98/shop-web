@@ -1,17 +1,12 @@
 <template>
   <div class="wrapper">
-    <div class="mapChart">
-      <map-chart
-        :chartData="mapData"
-        v-if="mapData"
-        @detail="checkDetailData"
-      ></map-chart>
+    <div class="mapChart" v-if="mapData">
+      <map-chart :chartData="mapData" @detail="checkDetailData"></map-chart>
     </div>
-    <div class="detailChart">
+    <div class="detailChart" v-if="detailData && regionName">
       <detail-chart
         :chartData="detailData"
         :regionName="regionName"
-        v-if="detailData && regionName"
       ></detail-chart>
     </div>
   </div>
