@@ -60,10 +60,14 @@ export default {
       api
         .login(this.loginForm)
         .then(res => {
-          sessionStorage.username = this.loginForm.name;
-          this.$message.success("登陆成功");
-          this.$emit("login");
-          this.$router.push("/").catch(err => err);
+          if (res.data === true) {
+            sessionStorage.username = this.loginForm.name;
+            this.$message.success("登陆成功");
+            this.$emit("login");
+            this.$router.push("/").catch(err => err);
+          } else {
+            this.$message.error("用户名与密码不匹配");
+          }
         })
         .catch(() => {
           this.$message.error("登陆失败");
