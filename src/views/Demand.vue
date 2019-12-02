@@ -146,13 +146,14 @@ export default {
           _this.$message.success("提交成功");
           let goodsName = "";
           _this.sellerGoodsList.forEach(item => {
-            if ((item.id = this.sellerGoodsId)) {
-              goodsName = item.name;
+            if (item.id === _this.sellerGoodsId) {
+              // console.log(item);
+              _this.tableData.push({
+                sellerUserName: _this.curUser,
+                name: item.name,
+                id: item.id
+              });
             }
-          });
-          _this.tableData.push({
-            sellerUserName: _this.curUser.username,
-            name: goodsName
           });
         })
         .catch(e => {
