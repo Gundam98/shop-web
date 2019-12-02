@@ -18,7 +18,16 @@
           <el-form-item prop="name" label="商品名">
             <el-input v-model="sellForm.name" clearable></el-input>
           </el-form-item>
-          <el-form-item prop="minPrice" label="起拍价">
+          <el-form-item prop="isbidMode" style="text-align:left">
+            <el-switch
+              v-model="sellForm.isBidMode"
+              active-text="拍卖"
+              inactive-text="一口价"
+              @change="bidModeChange"
+            >
+            </el-switch>
+          </el-form-item>
+          <el-form-item prop="minPrice" :label="minPriceLabel">
             <el-input v-model="sellForm.minPrice" type="number" clearable>
               <template slot="prepend">￥</template>
             </el-input>
@@ -44,6 +53,7 @@
             prop="overTime"
             label="结束时间"
             style="text-align:left"
+            v-if="sellForm.isBidMode"
           >
             <el-date-picker
               v-model="sellForm.overTime"
@@ -106,8 +116,10 @@ export default {
         minPrice: "",
         type: "",
         files: [],
-        description: ""
+        description: "",
+        isBidMode: false
       },
+      minPriceLabel: "售价",
       picPreview: [],
       dialogImageUrl: "",
       dialogVisible: false,
@@ -140,11 +152,28 @@ export default {
       this.newGoods = false;
       let res = await api.getGoodsInfo(this.$route.params.id);
       for (let key in this.sellForm) {
-        if (res.data[key]) this.sellForm[key] = res.data[key];
+        if (res.data[key]) {
+          if (key !== "isBidMode") {
+            this.sellForm[key] = res.data[key];
+          } else {
+            if (res.data[key] === "true") {
+              this.sellForm[key] = true;
+            } else {
+              this.sellForm[key] = false;
+            }
+          }
+        }
       }
     }
   },
   methods: {
+    bidModeChange: function(isBidMode) {
+      if (isBidMode) {
+        this.minPriceLabel = "起拍价";
+      } else {
+        this.minPriceLabel = "售价";
+      }
+    },
     upload: function() {
       let _this = this;
       this.$refs.files.submit();
@@ -154,16 +183,11 @@ export default {
           this.sellForm[i].forEach(file => {
             param.append("pics", file);
           });
-          /*let temp = this.sellForm[i];
-          param.append("file", temp[0]);*/
         } else {
+          console.log(this.sellForm[i]);
           param.append(i, this.sellForm[i]);
         }
       }
-      //console.log(this.sellForm.files);
-      //console.log(param.getAll("pics"));
-      //console.log(param.getAll("name"));
-
       if (this.$route.params.id) {
         api
           .updateGoods(this.$route.params.id, param)

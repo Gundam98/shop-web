@@ -78,7 +78,10 @@
               <el-tooltip
                 content="下架"
                 placement="bottom"
-                v-if="scope.row.statusName === '待竞价'"
+                v-if="
+                  scope.row.statusName === '待竞价' ||
+                    scope.row.statusName === '待出售'
+                "
               >
                 <el-button
                   icon="el-icon-download"
@@ -93,7 +96,8 @@
                 placement="bottom"
                 v-if="
                   scope.row.statusName === '待重新上架' ||
-                    scope.row.statusName === '待竞价'
+                    scope.row.statusName === '待竞价' ||
+                    scope.row.statusName === '待出售'
                 "
               >
                 <el-button
@@ -107,7 +111,8 @@
                 placement="bottom"
                 v-if="
                   scope.row.statusName === '待重新上架' ||
-                    scope.row.statusName === '待竞价'
+                    scope.row.statusName === '待竞价' ||
+                    scope.row.statusName === '待出售'
                 "
               >
                 <el-button
@@ -151,6 +156,7 @@
 <script>
 import api from "@/utils/api";
 import formatTime from "@/utils/formatTime";
+import judgeStatus from "@/utils/judgeStatus";
 
 export default {
   data() {
@@ -174,47 +180,21 @@ export default {
       while (count < tableData.length) {
         let i = count;
         //判断商品状态
-        if (tableData[i].status === 0) {
-          _this.$set(tableData[i], "statusName", "待重新上架");
-        } else if (tableData[i].status === 1) {
-          if (tableData[i].overTime <= new Date().getTime()) {
-            //竞拍结束
-            if (tableData[i].currentBuyerUserId !== null) {
-              //有人出价，等待卖家接受竞价
-              _this.$set(tableData[i], "statusName", "待接受竞价");
-            } else {
-              //无人出价，卖家可以修改信息
-              _this.$set(tableData[i], "statusName", "待重新上架");
-            }
-          } else {
-            //在竞拍时间内
-            if (tableData[i].currentBuyerUserId !== null) {
-              //有人出价，等待卖家接受竞价
-              _this.$set(tableData[i], "statusName", "竞价中");
-            } else {
-              //无人出价，卖家可以修改信息
-              _this.$set(tableData[i], "statusName", "待竞价");
-            }
-          }
-        } else {
-          _this.$set(tableData[i], "statusName", "已成交");
-        }
+        _this.$set(tableData[i], "statusName", judgeStatus(tableData[i]));
 
         //时间戳转时间字符串
-        _this.$set(
-          tableData[i],
-          "overTimeStr",
-          formatTime(tableData[i].overTime, "Y/M/D/ h:m:s")
-        );
+        if (tableData[i].overTime) {
+          _this.$set(
+            tableData[i],
+            "overTimeStr",
+            formatTime(tableData[i].overTime, "Y/M/D/ h:m:s")
+          );
+        } else {
+          _this.$set(tableData[i], "overTimeStr", "无");
+        }
 
         //通过竞价者id获取竞价者名字
-        if (tableData[i].currentBuyerUserId !== null) {
-          /*let _this = this;
-          api.getUserInfo(tableData[i].currentBuyerUserId).then(res => {
-            _this.$set(tableData[i], "currentBuyer", res.data.username);
-          });*/
-        } else {
-          //填充暂无
+        if (tableData[i].currentBuyerUserId === null) {
           _this.$set(tableData[i], "currentBuyerUserName", "暂无");
           _this.$set(tableData[i], "currentBuyerPrice", "暂无");
         }

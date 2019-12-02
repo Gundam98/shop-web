@@ -32,7 +32,7 @@
           </el-tag>
           <div style="font-size:40px">{{ goodsInfo.name }}</div>
         </div>
-        <div style="margin-bottom:20px;" v-if="!timeout">
+        <div style="margin-bottom:20px;" v-if="!timeout && isBidMode">
           <span>
             距离结束还有<countdown
               :endTime="goodsInfo.overTime"
@@ -43,8 +43,11 @@
         </div>
         <div>
           <span style="color:grey">当前价</span>
-          <span style="color:#ff0036;font-size:30px">
+          <span style="color:#ff0036;font-size:30px" v-if="isBidMode">
             ￥{{ goodsInfo.currentBuyerPrice || "暂无出价" }}
+          </span>
+          <span style="color:#ff0036;font-size:30px" v-if="!isBidMode">
+            ￥{{ goodsInfo.minPrice }}
           </span>
           <span v-if="goodsInfo.currentBuyerPrice" style="padding-left:20px">
             <span style="color:grey">竞价用户</span>
@@ -52,19 +55,21 @@
           </span>
         </div>
         <br />
-        <el-form :inline="true" v-if="!isSeller && !timeout">
-          <el-form-item>
+        <el-form :inline="true" v-if="!isSeller && (!timeout || !isBidMode)">
+          <el-form-item v-if="isBidMode">
             <el-input v-model="bidPrice" clearable>
               <template slot="prepend">￥</template>
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="bid"> 竞价 </el-button>
+            <el-button type="primary" @click="bid">
+              {{ bidButtonText }}
+            </el-button>
           </el-form-item>
         </el-form>
 
         <div style="font-size:12px">
-          <span style="margin-right:20px">
+          <span style="margin-right:20px" v-if="isBidMode">
             <span style="color:grey">起拍价</span>
             ￥{{ goodsInfo.minPrice }}
           </span>
@@ -103,6 +108,7 @@
 import api from "@/utils/api";
 import formatTime from "@/utils/formatTime";
 import countdown from "@/components/Countdown";
+import { exportDefaultSpecifier } from "@babel/types";
 export default {
   data() {
     return {
@@ -112,8 +118,10 @@ export default {
         type: "success",
         message: "竞拍中"
       },
-      timeout: false,
-      curUser: ""
+      timeout: true,
+      curUser: "",
+      isBidMode: false,
+      bidButtonText: "购买"
     };
   },
   components: {
@@ -137,20 +145,34 @@ export default {
     processGoodsInfo: function(data) {
       let info = data;
       // console.log(info);
-      if (info.overTime < new Date().getTime()) {
-        this.timeout = true;
-        if (info.currentBuyerUserId) {
-          this.tag = {
-            type: "danger",
-            message: "已成交"
-          };
+      if (data.isBidMode == "true") {
+        this.isBidMode = true;
+        this.bidButtonText = "竞价";
+        if (info.overTime < new Date().getTime()) {
+          this.timeout = true;
+          if (info.currentBuyerUserId) {
+            this.tag = {
+              type: "danger",
+              message: "已成交"
+            };
+          } else {
+            this.tag = {
+              type: "info",
+              message: "已结束"
+            };
+          }
         } else {
-          this.tag = {
-            type: "info",
-            message: "已结束"
-          };
+          this.timeout = false;
         }
+      } else {
+        this.isBidMode = false;
+        this.bidButtonText = "购买";
+        this.tag = {
+          type: "primary",
+          message: "一口价"
+        };
       }
+
       //时间戳转时间字符串
       info.modifiedTimeStr = formatTime(info.modifiedTime, "Y/M/D/ h:m:s");
 
@@ -173,33 +195,52 @@ export default {
       return result.reverse();
     },
     bid: function() {
-      if (new Date(this.goodsInfo.overTime) < new Date().getTime()) {
-        this.$message.warning("竞拍已结束");
-        this.$router.push("/").catch(e => e);
-        return;
-      }
-      if (
-        !this.goodsInfo.currentBuyerPrice &&
-        this.goodsInfo.minPrice > this.bidPrice
-      ) {
-        this.$message.warning("出价至少高于最低价");
-        return;
-      }
-      if (
-        this.goodsInfo.currentBuyerPrice &&
-        this.goodsInfo.currentBuyerPrice > this.bidPrice
-      ) {
-        this.$message.warning("出价至少高于当前价");
-        return;
-      }
-
       let _this = this;
-      api.bid(this.goodsInfo.id, this.bidPrice).then(res => {
-        _this.goodsInfo.currentBuyerPrice = _this.bidPrice;
-        _this.bidPrice = null;
-        _this.$set(_this.goodsInfo, "currentBuyer", sessionStorage.username);
-        _this.$message.success("竞价成功");
-      });
+      if (this.isBidMode) {
+        if (new Date(this.goodsInfo.overTime) < new Date().getTime()) {
+          this.$message.warning("竞拍已结束");
+          this.$router.push("/").catch(e => e);
+          return;
+        }
+        if (
+          !this.goodsInfo.currentBuyerPrice &&
+          this.goodsInfo.minPrice > this.bidPrice
+        ) {
+          this.$message.warning("出价至少高于最低价");
+          return;
+        }
+        if (
+          this.goodsInfo.currentBuyerPrice &&
+          this.goodsInfo.currentBuyerPrice > this.bidPrice
+        ) {
+          this.$message.warning("出价至少高于当前价");
+          return;
+        }
+
+        api.bid(this.goodsInfo.id, this.bidPrice).then(res => {
+          if (res.data === true) {
+            _this.goodsInfo.currentBuyerPrice = _this.bidPrice;
+            _this.bidPrice = null;
+
+            _this.$set(
+              _this.goodsInfo,
+              "currentBuyerUserName",
+              sessionStorage.username
+            );
+            _this.$message.success("竞价成功");
+          } else {
+            _this.$message.warning("账户余额不足，竞价失败");
+          }
+        });
+      } else {
+        api.buy(this.goodsInfo.id).then(res => {
+          if (res.data === true) {
+            _this.$message.success("购买成功");
+          } else {
+            _this.$message.warning("余额不足，购买失败");
+          }
+        });
+      }
     },
     goBack() {
       this.$router.go(-1);
