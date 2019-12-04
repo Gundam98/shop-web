@@ -72,7 +72,7 @@ export default {
     let checkPhoneNumber = (rule, value, callback) => {
       if (isNaN(value)) return callback(new Error("请输入电话号码"));
       else {
-        if (value.toString().length !== 8 || value.toString().length !== 11)
+        if (value.toString().length !== 8 && value.toString().length !== 11)
           return callback(new Error("仅支持11位手机号码或者8位电话号码"));
       }
     };
