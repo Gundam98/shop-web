@@ -212,8 +212,8 @@ export default {
             param.append("pics", file);
           });
         } else {
-          console.log(this.sellForm[i]);
-          console.log(i);
+          // console.log(this.sellForm[i]);
+          // console.log(i);
           param.append(i, this.sellForm[i]);
         }
       }
