@@ -65,10 +65,10 @@
             >
             </el-date-picker>
           </el-form-item>
-          <el-form-item prop="files" label="商品图片" style="text-align:left">
+          <el-form-item prop="pics" label="商品图片" style="text-align:left">
             <el-upload
               action=""
-              ref="files"
+              ref="pics"
               list-type="picture-card"
               multiple
               :on-preview="handlePictureCardPreview"
@@ -82,6 +82,20 @@
             <el-dialog :visible.sync="dialogVisible">
               <img width="100%" :src="dialogImageUrl" alt="" />
             </el-dialog>
+          </el-form-item>
+          <el-form-item prop="vid" label="商品视频" style="text-align:left">
+            <el-upload
+              action=""
+              ref="vid"
+              :on-remove="handleVideoRemove"
+              :auto-upload="false"
+              :http-request="videoUploadRequest"
+              :on-exceed="vidLimitWarning"
+            >
+              <el-button size="small" type="primary" :limit="1">
+                点击上传
+              </el-button>
+            </el-upload>
             <el-dialog :visible.sync="dialogVisible">
               <img width="100%" :src="dialogImageUrl" alt="" />
             </el-dialog>
@@ -116,9 +130,10 @@ export default {
         overTime: "",
         minPrice: "",
         type: "",
-        files: [],
+        pics: [],
         description: "",
-        isBidMode: false
+        isBidMode: false,
+        vid: null
       },
       minPriceLabel: "售价",
       picPreview: [],
@@ -152,7 +167,7 @@ export default {
         isBidMode: [
           { required: true, trigger: "blur", message: "请选择出售形式" }
         ],
-        files: [{ required: true, message: "请插入文件", trigger: "blur" }],
+        pics: [{ required: true, message: "请插入图片", trigger: "blur" }],
         type: [{ required: true, message: "请选择商品类型" }]
       }
     };
@@ -188,19 +203,17 @@ export default {
     },
     upload: function() {
       let _this = this;
-      this.$refs.files.submit();
+      this.$refs.pics.submit();
+      this.$refs.vid.submit();
       let param = new FormData();
       for (let i in this.sellForm) {
-        if (!this.sellForm[i]) {
-          this.$message.warning("信息填写不完整");
-          return;
-        }
-        if (i === "files") {
+        if (i === "pics") {
           this.sellForm[i].forEach(file => {
             param.append("pics", file);
           });
         } else {
-          // console.log(this.sellForm[i]);
+          console.log(this.sellForm[i]);
+          console.log(i);
           param.append(i, this.sellForm[i]);
         }
       }
@@ -226,9 +239,9 @@ export default {
       this.$message.warning("最多允许上传9张照片");
     },
     handlePictureCardRemove(file) {
-      for (let i = 0; i < this.sellForm.files.length; i++) {
-        if (this.sellForm.files[i].uid === file.uid) {
-          this.sellForm.files.splice(i, 1);
+      for (let i = 0; i < this.sellForm.pics.length; i++) {
+        if (this.sellForm.pics[i].uid === file.uid) {
+          this.sellForm.pics.splice(i, 1);
           return;
         }
       }
@@ -242,18 +255,27 @@ export default {
     },
     resetForm: function() {
       this.$refs.sellForm.resetFields();
-      this.$refs.files.clearFiles();
+      this.$refs.pics.clearFiles();
     },
     picUploadRequest: function(data) {
       let newPic = true;
-      this.sellForm.files.forEach(file => {
+      this.sellForm.pics.forEach(file => {
         if (file.uid === data.file.uid) {
           newPic = false;
         }
       });
       if (newPic) {
-        this.sellForm.files.push(data.file);
+        this.sellForm.pics.push(data.file);
       }
+    },
+    videoUploadRequest: function(data) {
+      this.sellForm.vid = data.file;
+    },
+    vidLimitWarning: function() {
+      this.$message.warning("只允许上传一个视频");
+    },
+    handleVideoRemove: function() {
+      this.sellForm.vid = null;
     }
   }
 };
