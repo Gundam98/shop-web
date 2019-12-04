@@ -90,6 +90,9 @@
 
     <el-tabs type="card" value="description" style="padding:20px">
       <el-tab-pane label="商品描述" name="description">
+        <video controls preload="auto" height="250px" v-if="goodsInfo.vidUrl">
+          <source :src="goodsInfo.vidUrl" type="video/mp4" />
+        </video>
         <p style="text-align: left">{{ goodsInfo.description }}</p>
       </el-tab-pane>
       <el-tab-pane label="服务说明" name="service">
@@ -112,6 +115,7 @@ import api from "@/utils/api";
 import formatTime from "@/utils/formatTime";
 import countdown from "@/components/Countdown";
 import { exportDefaultSpecifier } from "@babel/types";
+
 export default {
   data() {
     return {
@@ -191,6 +195,10 @@ export default {
             `http://127.0.0.1:8081/goodsResource/${info.id}/pic/${info.picUrlList[i]}`
           );
         })(i);
+      }
+      info.vidUrl = "";
+      if (info.vidUrlList && info.vidUrlList.length > 0) {
+        info.vidUrl = `http://127.0.0.1:8081/goodsResource/${info.id}/vid/${info.vidUrlList[0]}`;
       }
 
       return info;
