@@ -205,7 +205,7 @@ export default {
     },
     getHeadImgUrl: function(id, url) {
       if (id) {
-        return `http://127.0.0.1:8081/goodsResource/${id}/pic/${url}`;
+        return `http://127.0.0.1:8081/goodsResource/${id}/pic/${url}?t=${Math.random()}`;
       } else {
         // console.log("parse url failed");
         return undefined;
@@ -214,7 +214,9 @@ export default {
     getImgUrlList: function(id, urlList) {
       let list = [];
       urlList.forEach(element => {
-        list.push(`http://127.0.0.1:8081/goodsResource/${id}/pic/${element}`);
+        list.push(
+          `http://127.0.0.1:8081/goodsResource/${id}/pic/${element}?t=${Math.random()}`
+        );
       });
       return list;
     },

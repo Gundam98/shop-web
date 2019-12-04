@@ -192,13 +192,17 @@ export default {
       for (let i = 0; i < info.picUrlList.length; i++) {
         (function(i) {
           info.picUrl.push(
-            `http://127.0.0.1:8081/goodsResource/${info.id}/pic/${info.picUrlList[i]}`
+            `http://127.0.0.1:8081/goodsResource/${info.id}/pic/${
+              info.picUrlList[i]
+            }?t=${Math.random()}`
           );
         })(i);
       }
       info.vidUrl = "";
       if (info.vidUrlList && info.vidUrlList.length > 0) {
-        info.vidUrl = `http://127.0.0.1:8081/goodsResource/${info.id}/vid/${info.vidUrlList[0]}`;
+        info.vidUrl = `http://127.0.0.1:8081/goodsResource/${info.id}/vid/${
+          info.vidUrlList[0]
+        }?t=${Math.random()}`;
       }
 
       return info;
