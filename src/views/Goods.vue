@@ -154,6 +154,7 @@ export default {
       let info = data;
       // console.log(info);
       if (data.isBidMode == "true") {
+        //是竞价模式
         this.isBidMode = true;
         this.bidButtonText = "竞价";
         if (info.overTime < new Date().getTime()) {
@@ -173,14 +174,22 @@ export default {
           this.timeout = false;
         }
       } else {
+        //一口价模式
         this.isBidMode = false;
         this.bidButtonText = "购买";
-        this.tag = {
-          type: "primary",
-          message: "一口价"
-        };
-        if (this.status === 2) {
+        if (info.currentBuyerUserId) {
+          // 已被购买
           this.isDeal = true;
+          this.tag = {
+            type: "info",
+            message: "已成交"
+          };
+        } else {
+          this.isDeal = false;
+          this.tag = {
+            type: "primary",
+            message: "一口价"
+          };
         }
       }
 
