@@ -14,21 +14,13 @@
           class="view"
         >
           <el-form-item label="用户名">
-            <el-input
-              v-model="info.username"
-              readOnly="true"
-              clearable
-            ></el-input>
+            <el-input v-model="info.username" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item label="账户类型">
-            <el-input
-              v-model="info.typeStr"
-              readOnly="true"
-              clearable
-            ></el-input>
+            <el-input v-model="info.typeStr" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item label="余额">
-            <el-input v-model="info.money" readOnly="true" clearable>
+            <el-input v-model="info.money" readOnly="true">
               <template slot="prepend">￥</template>
             </el-input>
           </el-form-item>
@@ -43,40 +35,26 @@
             >
             </el-rate>
           </el-form-item>
-          <el-form-item label="真实姓名">
+          <el-form-item label="中介费率">
             <el-input
-              v-model="info.realName"
+              v-model="info.commissionRateStr"
               readOnly="true"
-              clearable
             ></el-input>
+          </el-form-item>
+          <el-form-item label="真实姓名">
+            <el-input v-model="info.realName" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item label="电话">
-            <el-input
-              v-model="info.telephone"
-              readOnly="true"
-              clearable
-            ></el-input>
+            <el-input v-model="info.telephone" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item label="注册地区">
-            <el-input
-              v-model="info.registerRegion"
-              readOnly="true"
-              clearable
-            ></el-input>
+            <el-input v-model="info.registerRegion" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item label="注册时间">
-            <el-input
-              v-model="info.registerTimeStr"
-              readOnly="true"
-              clearable
-            ></el-input>
+            <el-input v-model="info.registerTimeStr" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item label="上次修改时间">
-            <el-input
-              v-model="info.modifierTimeStr"
-              readOnly="true"
-              clearable
-            ></el-input>
+            <el-input v-model="info.modifierTimeStr" readOnly="true"></el-input>
           </el-form-item>
           <el-form-item style="margin-top:20px;margin-bottom:0;text-align:left">
             <charge-button
@@ -140,6 +118,7 @@ export default {
   },
   methods: {
     processData: function(data) {
+      console.log(data);
       //将时间戳转换成时间
       data.registerTimeStr = formatTime(data.registerTime, "Y/M/D/ h:m:s");
       data.modifierTimeStr = formatTime(data.modifierTime, "Y/M/D/ h:m:s");
@@ -153,6 +132,9 @@ export default {
 
       //将用户等级调整为一位小数
       data.level = Math.floor(data.level * 10) / 10;
+
+      //将费率调整为百分比
+      data.commissionRateStr = (data.commissionRate * 100).toString() + "%";
 
       return data;
     },
