@@ -76,6 +76,7 @@
               :file-list="picPreview"
               :auto-upload="false"
               :http-request="picUploadRequest"
+              accept="image/*"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -91,10 +92,14 @@
               :auto-upload="false"
               :http-request="videoUploadRequest"
               :on-exceed="vidLimitWarning"
+              accept=".mp4"
             >
               <el-button size="small" type="primary" :limit="1">
                 点击上传
               </el-button>
+              <div slot="tip" class="el-upload__tip">
+                仅支持mp4文件，且不超过20MB
+              </div>
             </el-upload>
             <el-dialog :visible.sync="dialogVisible">
               <img width="100%" :src="dialogImageUrl" alt="" />
