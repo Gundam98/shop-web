@@ -124,24 +124,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-.name:link {
-  text-decoration: none;
-  color: black;
-}
-
-.name:visited {
-  text-decoration: none;
-  color: black;
-}
-
-.name:hover {
-  color: red;
-  text-decoration: underline red;
-}
-
-.displayTable {
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px;
-  margin: 10px;
-}
-</style>
