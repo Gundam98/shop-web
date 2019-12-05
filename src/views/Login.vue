@@ -68,7 +68,7 @@ export default {
             sessionStorage.username = this.loginForm.name;
             this.$message.success("登陆成功");
             this.$emit("login");
-            this.$router.push("/").catch(err => err);
+            this.$router.go(-1);
           } else {
             this.$message.error("用户名与密码不匹配");
           }
