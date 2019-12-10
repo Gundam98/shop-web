@@ -253,12 +253,8 @@ export default {
       api
         .acceptPrice(id)
         .then(res => {
-          if (res.data) {
-            _this.$set(_this.tableData[i], "statusName", "已成交");
-            _this.$message.success("接受竞价成功");
-          } else {
-            _this.$message.warning("买方余额不足");
-          }
+          _this.$set(_this.tableData[i], "statusName", "已成交");
+          _this.$message.success("接受竞价成功");
         })
         .catch(e => e);
     },
