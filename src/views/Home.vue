@@ -67,7 +67,6 @@
         style="width: 100%"
         empty-text="暂无上架商品"
         v-loading="loading"
-        lazy
       >
         <el-table-column width="200">
           <template slot-scope="scope">
@@ -219,7 +218,7 @@ export default {
     },
     getHeadImgUrl: function(id, url) {
       if (id) {
-        return `http://127.0.0.1:8081/goodsResource/${id}/pic/${url}?t=${Math.random()}`;
+        return `http://127.0.0.1:8081/goodsResource/${id}/pic/${url}`;
       } else {
         console.log("parse url failed");
         return undefined;
