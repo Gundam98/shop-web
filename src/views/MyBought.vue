@@ -88,7 +88,7 @@ export default {
     },
     getHeadImgUrl: function(id, url) {
       if (id) {
-        return `http://127.0.0.1:8081/goodsResource/${id}/pic/${url}?t=${Math.random()}`;
+        return `http://127.0.0.1:8081/goodsResource/${id}/pic/${url}`;
       } else {
         // console.log("parse url failed");
         return undefined;
