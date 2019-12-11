@@ -17,7 +17,7 @@ export default {
     size: String,
     defaultRegion: {
       type: Number,
-      default: ""
+      default: null
     }
   },
   created() {
