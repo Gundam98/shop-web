@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <el-container>
+    <transition name="el-fade-in-linear">
+      <div class="headImg" v-show="showHeadImg">
+        <img  src="@/assets/headImg.png" object-fit='contain'/>
+      </div>
+    </transition>
+      <el-container>
       <el-header>
         <el-row class="header">
           <el-col :span="6">
@@ -113,12 +118,19 @@ export default {
     return {
       login: false,
       show: true,
+      showHeadImg: false,
       isRouterAlive: true,
       userType: 0
     };
   },
   created() {
     this.check();
+    setTimeout(()=>{
+      this.showHeadImg = false
+    },2000);
+    this.$nextTick(() => {
+        this.showHeadImg = true
+      });
     setInterval(() => {
       this.check();
     }, 10000);
@@ -220,5 +232,13 @@ img {
   height: auto;
   max-width: 100%;
   max-height: 100%;
+}
+
+.headImg {
+  position:fixed; 
+  z-index:10000; 
+  width:100%;
+  height:100%;
+  background-color:rgb(255,255,255,0.95)
 }
 </style>
