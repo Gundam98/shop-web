@@ -76,6 +76,26 @@ export default {
           return callback(new Error("仅支持11位手机号码或者8位电话号码"));
       }
     };
+    let checkPassword =  (rule, value, callback)=>{
+      let password = value;
+      let r = /^[A-Za-z][A-Za-z0-9]{13,}$/ //不以数字开头，至少有14位
+      let regex1 = /[A-Z]+/; // 有大写字母
+      let regex2 = /[a-z]+/; // 有小写字母
+      let regex3 = /[0-9]+/; // 有数字
+      if(!password.match(r)){
+        return callback(new Error("密码必须大于14位，且不能以数字开头"));
+      }
+      if(!password.match(regex1)){
+        return callback(new Error("密码必须包含大写字母"));
+      }
+      if(!password.match(regex2)){
+        return callback(new Error("密码必须包含小写字母"));
+      }
+      if(!password.match(regex3)){
+        return callback(new Error("密码必须包含数字"));
+      }
+
+    };
     return {
       registerForm: {
         username: "",
@@ -86,7 +106,10 @@ export default {
       },
       rules: {
         name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { validator: checkPassword, trigger: "blur" }
+        ],
         realName: [
           { required: true, message: "请输入真实姓名", trigger: "blur" }
         ],
