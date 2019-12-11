@@ -194,6 +194,7 @@ export default {
     updateDemand,
     updateParam,
     getAllStatistics,
+    getAllRegion,
     getDetailStatistics,
     buy
 };
