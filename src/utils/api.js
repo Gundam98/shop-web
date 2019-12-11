@@ -11,7 +11,7 @@ function getGoods(data) {
 }
 
 function getAllRegion() {
-    return axios.get("/region");
+    return axios.get("/province");
 }
 
 function buy(id) {
