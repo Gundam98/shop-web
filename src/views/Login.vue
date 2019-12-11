@@ -10,9 +10,9 @@
         <div style="font-size:30px;margin-bottom:10px">登陆</div>
         <el-form :model="loginForm" status-icon :rules="rules">
           <div>
-            <el-form-item prop="name">
+            <el-form-item prop="username">
               <el-input
-                v-model="loginForm.name"
+                v-model="loginForm.username"
                 placeholder="用户名"
                 clearable
               ></el-input>
@@ -50,11 +50,11 @@ export default {
   data() {
     return {
       loginForm: {
-        name: "",
+        username: "",
         password: ""
       },
       rules: {
-        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
@@ -65,7 +65,7 @@ export default {
         .login(this.loginForm)
         .then(res => {
           if (res.data === true) {
-            sessionStorage.username = this.loginForm.name;
+            sessionStorage.username = this.loginForm.username;
             this.$message.success("登陆成功");
             this.$emit("login");
             this.$router.go(-1);
