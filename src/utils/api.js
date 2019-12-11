@@ -10,6 +10,10 @@ function getGoods(data) {
     });
 }
 
+function getAllRegion() {
+    return axios.get("/region");
+}
+
 function buy(id) {
     return axios.post(`/trade/buy/${id}`);
 }
@@ -68,12 +72,7 @@ function logout() {
 }
 
 function login(data) {
-    return axios.get("/user/", {
-        params: {
-            username: data.name,
-            password: data.password
-        }
-    });
+    return axios.put("/user/login", data);
 }
 
 function sellGoods(data) {

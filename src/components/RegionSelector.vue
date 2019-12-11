@@ -2,60 +2,34 @@
   <el-select v-model="value" placeholder="地区" filterable :size="size">
     <el-option
       v-for="province in provinces"
-      :key="province"
-      :label="province"
-      :value="province"
+      :key="province.id"
+      :label="province.name"
+      :value="province.id"
     ></el-option>
   </el-select>
 </template>
 
 <script>
+import api from "@/utils/api";
+
 export default {
   props: {
     size: String,
     defaultRegion: {
-      type: String,
+      type: Number,
       default: ""
     }
   },
   created() {
+    let _this = this;
+    api.getAllRegion().then(res=>{
+      _this.provinces = res.data;
+    })
     this.value = this.defaultRegion;
   },
   data() {
     return {
-      provinces: [
-        "北京",
-        "浙江",
-        "天津",
-        "安徽",
-        "上海",
-        "福建",
-        "重庆",
-        "江西",
-        "山东",
-        "河南",
-        "内蒙古自治区",
-        "湖北",
-        "新疆维吾尔自治区",
-        "湖南",
-        "宁夏回族自治区",
-        "广东",
-        "西藏自治区",
-        "海南",
-        "广西壮族自治区",
-        "四川",
-        "河北",
-        "贵州",
-        "山西",
-        "云南",
-        "辽宁",
-        "陕西",
-        "吉林",
-        "甘肃",
-        "黑龙江",
-        "青海",
-        "江苏"
-      ],
+      provinces: [],
       value: ""
     };
   },
