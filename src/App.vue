@@ -1,11 +1,23 @@
 <template>
   <div id="app">
     <transition name="el-fade-in-linear">
-      <div class="headImg" v-show="showHeadImg">
-        <img  src="@/assets/headImg.png" object-fit='contain'/>
+      <div class="homePage" v-show="showHomePage">
+        <h1 class="headTitle">心意淘二手交易市场</h1>
+        <div class="headImg">
+          <img src="@/assets/headImg.png" object-fit="contain" />
+        </div>
+
+        <el-button
+          class="headButton"
+          @click="showHomePage = false"
+          type="warning"
+          style="text-align:center"
+        >
+          点击进入
+        </el-button>
       </div>
     </transition>
-      <el-container>
+    <el-container>
       <el-header>
         <el-row class="header">
           <el-col :span="6">
@@ -118,19 +130,13 @@ export default {
     return {
       login: false,
       show: true,
-      showHeadImg: false,
+      showHomePage: true,
       isRouterAlive: true,
       userType: 0
     };
   },
   created() {
     this.check();
-    setTimeout(()=>{
-      this.showHeadImg = false
-    },2000);
-    this.$nextTick(() => {
-        this.showHeadImg = true
-      });
     setInterval(() => {
       this.check();
     }, 10000);
@@ -234,11 +240,15 @@ img {
   max-height: 100%;
 }
 
+.homePage {
+  position: fixed;
+  z-index: 10000;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(255, 255, 255, 1);
+}
+
 .headImg {
-  position:fixed; 
-  z-index:10000; 
-  width:100%;
-  height:100%;
-  background-color:rgb(255,255,255,0.95)
+  margin-bottom: 50px;
 }
 </style>
