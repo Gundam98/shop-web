@@ -72,29 +72,32 @@ export default {
     let checkPhoneNumber = (rule, value, callback) => {
       if (isNaN(value)) return callback(new Error("请输入电话号码"));
       else {
-        if (value.toString().length !== 8 && value.toString().length !== 11)
+        if (value.toString().length !== 8 && value.toString().length !== 11) {
           return callback(new Error("仅支持11位手机号码或者8位电话号码"));
+        } else {
+          return callback();
+        }
       }
     };
-    let checkPassword =  (rule, value, callback)=>{
+    let checkPassword = (rule, value, callback) => {
       let password = value;
-      let r = /^[A-Za-z][A-Za-z0-9]{13,}$/ //不以数字开头，至少有14位
+      let r = /^[A-Za-z][A-Za-z0-9]{13,}$/; //不以数字开头，至少有14位
       let regex1 = /[A-Z]+/; // 有大写字母
       let regex2 = /[a-z]+/; // 有小写字母
       let regex3 = /[0-9]+/; // 有数字
-      if(!password.match(r)){
+      if (!password.match(r)) {
         return callback(new Error("密码必须大于14位，且不能以数字开头"));
       }
-      if(!password.match(regex1)){
+      if (!password.match(regex1)) {
         return callback(new Error("密码必须包含大写字母"));
       }
-      if(!password.match(regex2)){
+      if (!password.match(regex2)) {
         return callback(new Error("密码必须包含小写字母"));
       }
-      if(!password.match(regex3)){
+      if (!password.match(regex3)) {
         return callback(new Error("密码必须包含数字"));
       }
-
+      return callback();
     };
     return {
       registerForm: {
@@ -105,7 +108,9 @@ export default {
         registerRegion: ""
       },
       rules: {
-        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" }
+        ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
           { validator: checkPassword, trigger: "blur" }
